@@ -1,0 +1,15 @@
+[gd_resource type="Resource" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/EnemyConfig.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/dschungel_spaeher.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Dschungel-Späher"
+texture = ExtResource("2")
+hp = 8
+speed = 110.0
+reward = 4
+heart_cost = 1
+enrage_hp_threshold = 0.0
+enrage_speed_multiplier = 1.0

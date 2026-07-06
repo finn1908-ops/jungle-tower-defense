@@ -1,0 +1,2 @@
+extends TowerBase
+class_name BogenschuetzenNest

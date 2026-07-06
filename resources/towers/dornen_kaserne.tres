@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/TowerConfig.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/towers/dornen_kaserne.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Dornen-Kaserne"
+texture = ExtResource("2")
+cost = 60
+sell_refund_percent = 0.7
+damage = 4
+fire_rate = 0.5
+range = 70.0
+is_aoe = true
+dot_damage_per_tick = 0
+dot_tick_interval = 1.0
+dot_duration = 0.0

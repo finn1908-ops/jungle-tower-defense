@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/entities/BogenschuetzenNest.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/towers/bogenschuetzen_nest.tres" id="2"]
+[ext_resource type="Texture2D" path="res://assets/sprites/towers/bogenschuetzen_nest.png" id="3"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1"]
+radius = 150.0
+
+[node name="BogenschuetzenNest" type="Node2D"]
+script = ExtResource("1")
+config = ExtResource("2")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("3")
+scale = Vector2(0.09, 0.09)
+
+[node name="DetectionArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea"]
+shape = SubResource("CircleShape2D_1")
+
+[node name="FireTimer" type="Timer" parent="."]

@@ -1,0 +1,76 @@
+[gd_resource type="Resource" load_steps=19 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/LevelWaves.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/resources/WaveData.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/resources/WaveEntry.gd" id="3"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/DschungelSpaeher.tscn" id="4"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/WildschweinRammler.tscn" id="5"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/SteinPanzerkaefer.tscn" id="6"]
+
+[sub_resource type="Resource" id="Entry_w1_a"]
+script = ExtResource("3")
+enemy_scene = ExtResource("4")
+count = 6
+delay = 0.8
+
+[sub_resource type="Resource" id="Wave_1"]
+script = ExtResource("2")
+entries = [SubResource("Entry_w1_a")]
+
+[sub_resource type="Resource" id="Entry_w2_a"]
+script = ExtResource("3")
+enemy_scene = ExtResource("4")
+count = 4
+delay = 0.6
+
+[sub_resource type="Resource" id="Entry_w2_b"]
+script = ExtResource("3")
+enemy_scene = ExtResource("5")
+count = 4
+delay = 1.0
+
+[sub_resource type="Resource" id="Wave_2"]
+script = ExtResource("2")
+entries = [SubResource("Entry_w2_a"), SubResource("Entry_w2_b")]
+
+[sub_resource type="Resource" id="Entry_w3_a"]
+script = ExtResource("3")
+enemy_scene = ExtResource("5")
+count = 6
+delay = 0.7
+
+[sub_resource type="Resource" id="Entry_w3_b"]
+script = ExtResource("3")
+enemy_scene = ExtResource("6")
+count = 2
+delay = 2.0
+
+[sub_resource type="Resource" id="Wave_3"]
+script = ExtResource("2")
+entries = [SubResource("Entry_w3_a"), SubResource("Entry_w3_b")]
+
+[sub_resource type="Resource" id="Entry_w4_a"]
+script = ExtResource("3")
+enemy_scene = ExtResource("4")
+count = 6
+delay = 0.5
+
+[sub_resource type="Resource" id="Entry_w4_b"]
+script = ExtResource("3")
+enemy_scene = ExtResource("5")
+count = 4
+delay = 0.6
+
+[sub_resource type="Resource" id="Entry_w4_c"]
+script = ExtResource("3")
+enemy_scene = ExtResource("6")
+count = 2
+delay = 1.5
+
+[sub_resource type="Resource" id="Wave_4"]
+script = ExtResource("2")
+entries = [SubResource("Entry_w4_a"), SubResource("Entry_w4_b"), SubResource("Entry_w4_c")]
+
+[resource]
+script = ExtResource("1")
+waves = [SubResource("Wave_1"), SubResource("Wave_2"), SubResource("Wave_3"), SubResource("Wave_4")]
