@@ -42,3 +42,11 @@ Konventionen: siehe docs/Architektur.md Abschnitt 11 (Ordnerstruktur,
 
 Naming-Konventionen, Signal-Kommunikation, Resource-basiertes Balancing)
 
+## Verbindliche Arbeitsregeln
+
+Nach jedem abgeschlossenen Auftrag: alle Änderungen mit einer aussagekräftigen
+
+deutschen Commit-Message committen und zu GitHub pushen (git push). Kein
+
+Auftrag gilt als fertig, bevor gepusht wurde.
+

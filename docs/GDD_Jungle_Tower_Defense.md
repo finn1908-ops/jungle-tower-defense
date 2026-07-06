@@ -134,9 +134,10 @@ Helikopter), Tarn-Falle, Artillerie (indirekter Fernschuss)
 - Look: stilisiert, farbenfroh, Dschungel-Palette (Grün-/Erdtöne mit
   Akzentfarben pro Fraktion) – **Style Guide folgt als eigenes Dokument**
 - Animation: **Gestuftes Vorgehen.** Stufe 1 (jetzt, Content-Produktion):
-  Oberkörper als statisches Sprite, Beine als separate 2-Bild-
-  Wechselanimation, horizontale Spiegelung je nach Pfadrichtung. Stufe 2
-  (Polish-Phase, Schritt 7): vollständiges Skelett-Rig über Godot
+  3-Frame-Ganzkörper-Spritesheet als Walk-Loop (AnimatedSprite2D),
+  horizontale Spiegelung je nach Pfadrichtung. Der frühere Ansatz
+  "Oberkörper statisch + Beine separat" wurde nach Praxistest verworfen.
+  Stufe 2 (Polish-Phase, Schritt 7): vollständiges Skelett-Rig über Godot
   Skeleton2D/AnimationPlayer mit mehrteiligen Körper-Layern. Diese
   Entscheidung gilt automatisch für alle betroffenen Phasen bis zum
   Polish, ohne erneute Abstimmung nötig.
