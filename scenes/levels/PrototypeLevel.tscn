@@ -1,10 +1,15 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://scripts/systems/PrototypeLevel.gd" id="1"]
 [ext_resource type="Script" path="res://scripts/systems/WaveManager.gd" id="2"]
 [ext_resource type="Script" path="res://scripts/ui/HUD.gd" id="3"]
 [ext_resource type="Resource" path="res://resources/waves/prototype_level_waves.tres" id="4"]
 [ext_resource type="PackedScene" path="res://scenes/towers/BogenschuetzenNest.tscn" id="5"]
+[ext_resource type="Script" path="res://scripts/entities/TowerSlot.gd" id="6"]
+[ext_resource type="Resource" path="res://resources/towers/bogenschuetzen_nest.tres" id="7"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_slot"]
+radius = 32.0
 
 [node name="Level" type="Node2D"]
 script = ExtResource("1")
@@ -14,14 +19,35 @@ position = Vector2(60, 0)
 
 [node name="EnemyPath" type="Path2D" parent="."]
 
-[node name="TowerSlot" type="Marker2D" parent="."]
-position = Vector2(360, 0)
+[node name="TowerSlots" type="Node2D" parent="."]
 
-[node name="BogenschuetzenNest" parent="TowerSlot" instance=ExtResource("5")]
+[node name="TowerSlot1" type="Area2D" parent="TowerSlots"]
+position = Vector2(-340, 90)
+script = ExtResource("6")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TowerSlots/TowerSlot1"]
+shape = SubResource("CircleShape2D_slot")
+
+[node name="TowerSlot2" type="Area2D" parent="TowerSlots"]
+position = Vector2(40, -350)
+script = ExtResource("6")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TowerSlots/TowerSlot2"]
+shape = SubResource("CircleShape2D_slot")
+
+[node name="TowerSlot3" type="Area2D" parent="TowerSlots"]
+position = Vector2(440, 350)
+script = ExtResource("6")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TowerSlots/TowerSlot3"]
+shape = SubResource("CircleShape2D_slot")
 
 [node name="HUD" type="CanvasLayer" parent="."]
 script = ExtResource("3")
 wave_manager_path = NodePath("../WaveManager")
+tower_slots_path = NodePath("../TowerSlots")
+starter_tower_scene = ExtResource("5")
+starter_tower_config = ExtResource("7")
 
 [node name="GoldLabel" type="Label" parent="HUD"]
 offset_left = 20.0
@@ -44,14 +70,123 @@ offset_right = 220.0
 offset_bottom = 110.0
 text = "Welle: 0"
 
-[node name="GameOverLabel" type="Label" parent="HUD"]
-offset_left = 426.0
-offset_top = 280.0
-offset_right = 726.0
-offset_bottom = 340.0
+[node name="StartWaveButton" type="Button" parent="HUD"]
+offset_left = 476.0
+offset_top = 580.0
+offset_right = 676.0
+offset_bottom = 620.0
+text = "Welle starten"
+
+[node name="BuildMenu" type="Panel" parent="HUD"]
+visible = false
+offset_left = 376.0
+offset_top = 420.0
+offset_right = 776.0
+offset_bottom = 560.0
+
+[node name="BuildInfoLabel" type="Label" parent="HUD/BuildMenu"]
+offset_left = 16.0
+offset_top = 12.0
+offset_right = 384.0
+offset_bottom = 42.0
+text = "Bogenschützen-Nest (50 Gold)"
+
+[node name="BuildConfirmButton" type="Button" parent="HUD/BuildMenu"]
+offset_left = 16.0
+offset_top = 60.0
+offset_right = 190.0
+offset_bottom = 100.0
+text = "Bauen"
+
+[node name="BuildCancelButton" type="Button" parent="HUD/BuildMenu"]
+offset_left = 210.0
+offset_top = 60.0
+offset_right = 384.0
+offset_bottom = 100.0
+text = "Abbrechen"
+
+[node name="SellMenu" type="Panel" parent="HUD"]
+visible = false
+offset_left = 376.0
+offset_top = 420.0
+offset_right = 776.0
+offset_bottom = 560.0
+
+[node name="SellInfoLabel" type="Label" parent="HUD/SellMenu"]
+offset_left = 16.0
+offset_top = 12.0
+offset_right = 384.0
+offset_bottom = 42.0
+text = "Verkaufen fuer 35 Gold"
+
+[node name="SellConfirmButton" type="Button" parent="HUD/SellMenu"]
+offset_left = 16.0
+offset_top = 60.0
+offset_right = 190.0
+offset_bottom = 100.0
+text = "Verkaufen"
+
+[node name="SellCancelButton" type="Button" parent="HUD/SellMenu"]
+offset_left = 210.0
+offset_top = 60.0
+offset_right = 384.0
+offset_bottom = 100.0
+text = "Abbrechen"
+
+[node name="GameOverPanel" type="Panel" parent="HUD"]
+visible = false
+offset_left = 376.0
+offset_top = 260.0
+offset_right = 776.0
+offset_bottom = 400.0
+
+[node name="GameOverLabel" type="Label" parent="HUD/GameOverPanel"]
+offset_left = 0.0
+offset_top = 20.0
+offset_right = 400.0
+offset_bottom = 60.0
 theme_override_font_sizes/font_size = 32
 horizontal_alignment = 1
 text = "GAME OVER"
+
+[node name="GameOverRestartButton" type="Button" parent="HUD/GameOverPanel"]
+offset_left = 100.0
+offset_top = 80.0
+offset_right = 300.0
+offset_bottom = 120.0
+text = "Neustart"
+
+[node name="VictoryPanel" type="Panel" parent="HUD"]
+visible = false
+offset_left = 376.0
+offset_top = 260.0
+offset_right = 776.0
+offset_bottom = 400.0
+
+[node name="VictoryLabel" type="Label" parent="HUD/VictoryPanel"]
+offset_left = 0.0
+offset_top = 20.0
+offset_right = 400.0
+offset_bottom = 60.0
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+text = "SIEG!"
+
+[node name="StarsLabel" type="Label" parent="HUD/VictoryPanel"]
+offset_left = 0.0
+offset_top = 60.0
+offset_right = 400.0
+offset_bottom = 90.0
+theme_override_font_sizes/font_size = 24
+horizontal_alignment = 1
+text = "★★★"
+
+[node name="VictoryRestartButton" type="Button" parent="HUD/VictoryPanel"]
+offset_left = 100.0
+offset_top = 100.0
+offset_right = 300.0
+offset_bottom = 140.0
+text = "Neustart"
 
 [node name="WaveManager" type="Node" parent="."]
 script = ExtResource("2")
