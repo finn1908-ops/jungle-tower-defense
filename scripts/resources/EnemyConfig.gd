@@ -11,3 +11,7 @@ class_name EnemyConfig
 
 @export var enrage_hp_threshold: float = 0.0
 @export var enrage_speed_multiplier: float = 1.0
+
+## Abstand des Lebensbalkens ueber dem Node-Ursprung, relativ zur Sprite-Hoehe
+## dieses Gegnertyps (Welt-Einheiten).
+@export var health_bar_offset: float = 40.0

@@ -17,7 +17,7 @@ func _ready() -> void:
 		_sprite.texture = config.texture
 	if _detection_shape.shape is CircleShape2D:
 		var shape: CircleShape2D = _detection_shape.shape.duplicate()
-		shape.radius = config.range
+		shape.radius = config.attack_range
 		_detection_shape.shape = shape
 	_fire_timer.wait_time = config.fire_rate
 	_fire_timer.timeout.connect(_on_fire_timer_timeout)
@@ -32,14 +32,24 @@ func _on_fire_timer_timeout() -> void:
 
 func _fire_single() -> void:
 	var target := _find_target()
-	if target:
+	if target == null:
+		return
+	if config.projectile_scene:
+		_fire_projectile(target)
+	else:
 		_apply_hit(target)
+
+func _fire_projectile(target: EnemyBase) -> void:
+	var projectile: ProjectileBase = config.projectile_scene.instantiate()
+	get_tree().current_scene.add_child(projectile)
+	projectile.global_position = global_position
+	projectile.launch(target, _apply_hit)
 
 func _fire_aoe() -> void:
 	for enemy in get_tree().get_nodes_in_group("enemies"):
 		if not is_instance_valid(enemy):
 			continue
-		if global_position.distance_to(enemy.global_position) <= config.range:
+		if global_position.distance_to(enemy.global_position) <= config.attack_range:
 			_apply_hit(enemy)
 
 func _apply_hit(enemy: EnemyBase) -> void:
@@ -49,7 +59,7 @@ func _apply_hit(enemy: EnemyBase) -> void:
 
 func _find_target() -> EnemyBase:
 	if is_instance_valid(_current_target):
-		if global_position.distance_to(_current_target.global_position) <= config.range:
+		if global_position.distance_to(_current_target.global_position) <= config.attack_range:
 			return _current_target
 		_current_target = null
 	var best: EnemyBase = null
@@ -58,7 +68,7 @@ func _find_target() -> EnemyBase:
 		if not is_instance_valid(enemy):
 			continue
 		var distance: float = global_position.distance_to(enemy.global_position)
-		if distance > config.range:
+		if distance > config.attack_range:
 			continue
 		var progress: float = enemy.get_path_progress()
 		if progress > best_progress:

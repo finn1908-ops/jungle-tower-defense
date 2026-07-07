@@ -57,6 +57,7 @@ func take_damage(amount: int) -> void:
 	if _is_dead:
 		return
 	hp -= amount
+	queue_redraw()
 	if hp <= 0:
 		_die()
 
@@ -98,3 +99,14 @@ func _remove_from_path() -> void:
 
 func _on_game_over() -> void:
 	_game_over = true
+
+## Schmaler Lebensbalken ueber dem Kopf, nur sichtbar bei Schaden.
+func _draw() -> void:
+	if config == null or _is_dead or hp <= 0 or hp >= _max_hp:
+		return
+	var bar_width := 40.0
+	var bar_height := 5.0
+	var top_left := Vector2(-bar_width / 2.0, -config.health_bar_offset)
+	var ratio: float = float(hp) / float(_max_hp)
+	draw_rect(Rect2(top_left, Vector2(bar_width, bar_height)), Color(0.6, 0.08, 0.08))
+	draw_rect(Rect2(top_left, Vector2(bar_width * ratio, bar_height)), Color(0.15, 0.75, 0.2))

@@ -13,3 +13,4 @@ reward = 4
 heart_cost = 1
 enrage_hp_threshold = 0.0
 enrage_speed_multiplier = 1.0
+health_bar_offset = 42.0

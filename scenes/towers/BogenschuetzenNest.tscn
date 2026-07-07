@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/towers/bogenschuetzen_nest.png" id="3"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1"]
-radius = 150.0
+radius = 220.0
 
 [node name="BogenschuetzenNest" type="Node2D"]
 script = ExtResource("1")
@@ -13,7 +13,7 @@ config = ExtResource("2")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("3")
-scale = Vector2(0.09, 0.09)
+scale = Vector2(0.096, 0.096)
 
 [node name="DetectionArea" type="Area2D" parent="."]
 collision_layer = 0
