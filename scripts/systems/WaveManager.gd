@@ -17,6 +17,8 @@ var _all_waves_spawned: bool = false
 var _level_completed: bool = false
 var _alive_enemies: int = 0
 
+const _SPAWN_DELAY_JITTER := 0.2
+
 func _ready() -> void:
 	enemy_path = get_node_or_null(enemy_path_node) as Path2D
 	GameState.game_over.connect(_on_game_over)
@@ -43,7 +45,8 @@ func _run_wave(index: int) -> void:
 			if _game_over:
 				return
 			_spawn_enemy(entry.enemy_scene)
-			await get_tree().create_timer(entry.delay).timeout
+			var effective_delay: float = max(0.0, entry.delay + randf_range(-_SPAWN_DELAY_JITTER, _SPAWN_DELAY_JITTER))
+			await get_tree().create_timer(effective_delay).timeout
 	if _game_over:
 		return
 	_current_wave_index += 1

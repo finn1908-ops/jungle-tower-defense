@@ -39,8 +39,20 @@ func remove_tower() -> int:
 	queue_redraw()
 	return refund
 
+const _MARKER_RADIUS := 28.0
+const _MARKER_FILL := Color(0.22, 0.14, 0.07, 0.95)
+const _MARKER_BORDER := Color(0.95, 0.88, 0.68, 1.0)
+const _MARKER_BORDER_WIDTH := 4.0
+const _MARKER_CROSS_LENGTH := 18.0
+const _MARKER_CROSS_WIDTH := 4.0
+
+## Deutlich sichtbarer Platzhalter-Marker fuer freie Slots: dunkler
+## Erdton-Kreis mit hellem Rand und Kreuz, damit er auf gruenem Untergrund
+## sofort auffaellt.
 func _draw() -> void:
 	if is_occupied:
 		return
-	draw_circle(Vector2.ZERO, 28.0, Color(1.0, 1.0, 1.0, 0.22))
-	draw_arc(Vector2.ZERO, 28.0, 0.0, TAU, 32, Color(1.0, 1.0, 1.0, 0.55), 2.0)
+	draw_circle(Vector2.ZERO, _MARKER_RADIUS, _MARKER_FILL)
+	draw_arc(Vector2.ZERO, _MARKER_RADIUS, 0.0, TAU, 48, _MARKER_BORDER, _MARKER_BORDER_WIDTH)
+	draw_line(Vector2(-_MARKER_CROSS_LENGTH / 2.0, 0.0), Vector2(_MARKER_CROSS_LENGTH / 2.0, 0.0), _MARKER_BORDER, _MARKER_CROSS_WIDTH)
+	draw_line(Vector2(0.0, -_MARKER_CROSS_LENGTH / 2.0), Vector2(0.0, _MARKER_CROSS_LENGTH / 2.0), _MARKER_BORDER, _MARKER_CROSS_WIDTH)

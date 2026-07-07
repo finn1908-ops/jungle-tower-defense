@@ -100,13 +100,21 @@ func _remove_from_path() -> void:
 func _on_game_over() -> void:
 	_game_over = true
 
-## Schmaler Lebensbalken ueber dem Kopf, nur sichtbar bei Schaden.
+const _HEALTH_BAR_WIDTH := 46.0
+const _HEALTH_BAR_HEIGHT := 7.0
+const _HEALTH_BAR_BORDER_WIDTH := 1.0
+const _HEALTH_BAR_BORDER_COLOR := Color(0.08, 0.05, 0.04, 0.9)
+const _HEALTH_BAR_BG_COLOR := Color(0.6, 0.08, 0.08)
+const _HEALTH_BAR_FILL_COLOR := Color(0.15, 0.75, 0.2)
+
+## Lebensbalken ueber dem Kopf, nur sichtbar bei Schaden. Position weiterhin
+## ueber config.health_bar_offset (EnemyConfig, pro Gegnertyp einstellbar).
 func _draw() -> void:
 	if config == null or _is_dead or hp <= 0 or hp >= _max_hp:
 		return
-	var bar_width := 40.0
-	var bar_height := 5.0
-	var top_left := Vector2(-bar_width / 2.0, -config.health_bar_offset)
+	var top_left := Vector2(-_HEALTH_BAR_WIDTH / 2.0, -config.health_bar_offset)
+	var size := Vector2(_HEALTH_BAR_WIDTH, _HEALTH_BAR_HEIGHT)
 	var ratio: float = float(hp) / float(_max_hp)
-	draw_rect(Rect2(top_left, Vector2(bar_width, bar_height)), Color(0.6, 0.08, 0.08))
-	draw_rect(Rect2(top_left, Vector2(bar_width * ratio, bar_height)), Color(0.15, 0.75, 0.2))
+	draw_rect(Rect2(top_left, size), _HEALTH_BAR_BG_COLOR)
+	draw_rect(Rect2(top_left, Vector2(_HEALTH_BAR_WIDTH * ratio, _HEALTH_BAR_HEIGHT)), _HEALTH_BAR_FILL_COLOR)
+	draw_rect(Rect2(top_left, size), _HEALTH_BAR_BORDER_COLOR, false, _HEALTH_BAR_BORDER_WIDTH)
