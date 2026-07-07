@@ -26,8 +26,10 @@ Texturen, damit der Pfad auch bei dichter Vegetation gut lesbar bleibt.
 
 ## Details & Dekoration
 
-Felsen, Palmen, Büsche/Farne, blühende Sträucher – als Randbepflanzung,
-nicht auf dem eigentlichen Pfad.
+Felsen, Palmen, Büsche/Farne, Gräser – als Randbepflanzung, nicht auf dem
+eigentlichen Pfad. KEINE bunten Blumen oder blühenden floralen Elemente –
+Vegetation bleibt ausschließlich in gedeckten Grün-/Erdtönen (verwachsener
+Militärstützpunkt, kein tropischer Garten).
 
 ## Einheiten – Feinde (Referenz-Roster)
 
@@ -97,8 +99,34 @@ Schattierung: 2-3 flache Farbstufen pro Fläche, keine weichen Verläufe.
 ```
 Dieser Baustein gehört in jeden ChatGPT-Image-Prompt ab jetzt.
 
+## Kernpalette (verbindlich, aus dem Zielbild abgeleitet)
+
+Alle Assets und UI-Elemente nutzen diese Palette. Die Karte ist fast
+vollständig Grün/Erdton – nur zwei Signalfarben stechen heraus:
+Rot = Gefahr/Gegner, Gold = Aktion/Belohnung.
+
+**Umgebung:**
+- Dschungel-Schatten (Kartengrundton): #1E2A15
+- Dschungel-Mittelgrün: #36421E
+- Vegetation-Highlight: #424E1E
+- Erdpfad Hauptton: #BA8A4E
+- Erdpfad Schatten/Rand: #8A6636
+- Fels/Stein: #66664E
+- Wasser Basiston (Teal): #366655
+- Wasser Highlight: #42725A
+
+**Fraktionskontrast:**
+- Gegner-Akzent (Bandanas, Uniform-Details): #A2361E
+- Lebensleisten/Herz-Rot: #BD4526
+- Spieler-Türme: gedeckte Militärgrün-/Grau-Töne aus der
+  Umgebungspalette, kühl/neutral – niemals warme Rot-/Orangetöne
+
+**UI:**
+- Panel-Hintergrund: #121212 (ca. 85% Deckkraft über dem Spielfeld)
+- Gold/Aktions-Akzent (Münzen, Welle-starten-Button): #EA9C06
+- UI-Text: Weiß/Cremeweiß auf dunklem Panel
+
 ## Offen / noch zu ergänzen
 
-- Konkrete Hex-Farbwerte für die Kernpalette
 - Schriftart(en) für UI
 - Referenzbilder für die erweiterten Gegner/Türme aus Abschnitt 5.5 des GDD
