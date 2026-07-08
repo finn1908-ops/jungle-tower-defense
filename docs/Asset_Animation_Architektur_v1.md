@@ -249,6 +249,22 @@ Diese Vorlage ist verbindlich.
 **Zuständiger Chat-Kontext:** <Verweis auf den ChatGPT-Image-Chat, in dem
 gearbeitet wird – Style-Anker-Regel!>
 
+## 0. Preflight-Check vor Finalisierung
+
+Pflicht, bevor dieses Dokument als fertig gilt (siehe Abschnitt 14, Regel 9):
+
+- [ ] Aktuelle `Asset_Animation_Architektur_v1.md` geprüft
+- [ ] Relevante Base-Skripte geprüft
+- [ ] Relevante Config-/Resource-Skripte geprüft
+- [ ] Alle Feldnamen im Integrationsauftrag entsprechen dem aktuellen Code
+      oder werden im Auftrag explizit neu angelegt
+- [ ] Keine alten Architekturbegriffe verwendet, die im aktuellen
+      Projektstand nicht mehr gelten
+- [ ] Keine Referenz auf nicht existierende Szenen wie z. B.
+      `TowerBase.tscn`, falls diese nicht wirklich existieren
+- [ ] Unklare Punkte sind als „Claude Code prüfen / nachfragen" markiert,
+      nicht geraten
+
 ## 1. Bestandteile des Pakets
 
 Liste aller Bilddateien, die zu diesem Entity gehören, mit Ziel-Dateinamen
@@ -856,6 +872,19 @@ und den `CLAUDE.md`-Regeln gelten ab jetzt:
    **Keine neuen Türme mehr als monolithischer Einzelsprite ohne
    dokumentiertes Opt-out.**
 
+9. **Preflight-Check vor jedem Asset-Paket- und Integrationsauftrag ist
+   Pflicht.** Claude muss vor Finalisierung des Dokuments die aktuelle
+   `Asset_Animation_Architektur_v1.md`, die relevanten Base-Skripte und
+   die relevanten Config-Skripte gegenprüfen. Bei Türmen sind das
+   mindestens `TowerBase.gd` und `TowerConfig.gd`, bei Gegnern
+   `EnemyBase.gd` und `EnemyConfig.gd`, bei Effekten `EffectBase.gd` und
+   `EffectConfig.gd`. Integrationsaufträge dürfen nur Feldnamen,
+   Szenenstrukturen und Dateipfade verwenden, die im aktuellen
+   Projektstand wirklich existieren oder im selben Auftrag ausdrücklich
+   neu angelegt werden. Hypothetische Feldnamen sind verboten. Wenn ein
+   Feld oder eine Struktur unklar ist, muss der Auftrag dies als
+   Prüfpunkt markieren oder nachfragen – nicht raten.
+
 ---
 
 ## 15. Was als Nächstes ansteht (Ausblick)
@@ -924,34 +953,4 @@ wenn Legacy-Config aktiviert wird).
   Mündungsfeuer und Einschlag nicht hart im Code verdrahtet werden.
 - Migration der bestehenden Turm-Configs präzisiert: Bogenschützen-Nest,
   Dornen-Kaserne und Giftschleuder dürfen technisch migriert werden, auch
-  wenn sie inhaltlich pausiert bzw. deprecated sind.
-
-**v1.1 (07. Juli 2026):**
-- Bogenschützen-Nest als erster Turm entfernt (stilistischer Bruch mit
-  StyleGuide-Roster, das militärische Türme vorsieht). Ersetzt durch
-  MG-Turm.
-- Neuer verbindlicher Turm-Aufbau: Sockel (statisch, zur Kamera
-  ausgerichtet) + Turret (rotiert zum Ziel). Opt-out via
-  `turret_rotation_enabled = false` für Sondertürme (Mörser, Tarn-Falle,
-  aktuelle Dornen-Kaserne).
-- Turm-Paket-Bestandteile (Section 6.1) auf zweiteiligen Aufbau
-  umgestellt: `base.png` + `turret.png` statt `idle.png`.
-- Turm-State-Machine (Section 7.2) um konkrete Rotation-Semantik im
-  `ACQUIRING`-State ergänzt.
-- Pivot-Regeln (Section 10) um Turret-Drehachse und `MuzzlePoint`-Marker
-  ergänzt.
-- Neue Regel Nr. 8 für Claude Code (Section 14): Türme standardmäßig
-  Sockel + Turret, monolithische Legacy-Einzelsprites nur mit
-  dokumentiertem Opt-out.
-- Ausblick (Section 15) Reihenfolge festgelegt: Aufräum-Auftrag →
-  TowerBase-Refactor (AttackBehavior + Sockel/Turret) →
-  Asset-Paket-Dokument → MG-Turm-Integration (ab hier ist das Spiel
-  wieder vollständig spielbar) → Level-Hintergrund-Einbau (jetzt mit
-  funktionsfähigem Turm testbar) → Gegner-Paket → Animation-State-Machine
-  → Balancing-Pass.
-
-**v1.0 (07. Juli 2026):**
-- Erstversion des Dokuments. Etabliert Asset-Kategorien,
-  Namenskonventionen, Asset-Paket-Regel (Entity vs. Nicht-Entity),
-  Animation-State-Machines, Effekt-System, AttackBehavior-Komponenten,
-  Pivot-Regeln, Definition of Done, Pipeline.
+  wenn sie inhaltlich pausie
