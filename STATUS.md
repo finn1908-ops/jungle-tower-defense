@@ -1,4 +1,6 @@
-Aktueller MVP-Scope: 1 Turm (Bogenschützen-Nest), 1 Gegner (Dschungel-Späher), 1 Held (Dschungel-Wächter), 1 Level.
+Aktueller MVP-Scope: 1 Turm (MG-Turm, noch nicht produziert), 1 Gegner (Dschungel-Späher), 1 Held (Dschungel-Wächter), 1 Level.
+
+Übergangsstatus: Das Bogenschützen-Nest bleibt bis zur erfolgreichen MG-Turm-Integration als deprecated Legacy-Starter-Turm im Projekt, damit der Prototyp während Refactor und Asset-Produktion vollständig spielbar bleibt. Danach wird es in einem separaten Cleanup-Auftrag entfernt.
 
 
 
@@ -6,7 +8,7 @@ Bestätigte Architektur-Entscheidungen (verbindlich, nicht erneut zur Diskussion
 
 \- WaveManager ist KEIN Autoload-Singleton, sondern ein normaler Node innerhalb jeder Level-Szene (scripts/systems/WaveManager.gd). Grund: Wellendaten sind pro Level unterschiedlich.
 
-\- MVP-Content-Fokus: Bogenschützen-Nest (Turm) und Dschungel-Späher (Gegner) sind die EINZIGEN Typen, die aktuell animiert/fertiggestellt werden. Dornen-Kaserne, Giftschleuder, Wildschwein-Rammler, Stein-Panzerkäfer existieren bereits als Szenen/Configs, bleiben aber unangetastet bis der Animationsansatz bestätigt ist.
+\- MVP-Content-Fokus: MG-Turm (Turm) und Dschungel-Späher (Gegner) sind die EINZIGEN Typen, die aktuell produziert/fertiggestellt werden. Bogenschützen-Nest bleibt nur temporär als deprecated Legacy-Starter-Turm erhalten. Dornen-Kaserne und Giftschleuder bleiben inhaltlich pausiert, dürfen aber im TowerBase-Refactor technisch auf die neue AttackBehavior-/TowerBase-Struktur migriert werden. Wildschwein-Rammler und Stein-Panzerkäfer existieren als funktionale Platzhalter und bleiben unangetastet bis der Gegner-Animationsansatz erweitert wird.
 
 
 
@@ -47,6 +49,11 @@ ausrichten) wurde in Prompt_Baukasten_Assets.md dauerhaft dokumentiert.
 
 Nächste offene Content-Bausteine für den vertikalen Durchstich (1 Turm,
 1 Gegner, 1 Level mit Pfad):
-- Turm-Sprite (Bogenschützen-Nest), statisches Bild – Prompt liegt bereit
-- Levelhintergrund (Boden- und Pfad-Textur, kachelbar) – Prompts liegen
-  bereit
+- TowerBase-Refactor (Sockel + Turret + AttackBehavior) mit technischer Migration der bestehenden Legacy-Türme
+- MG-Turm Level 1 Asset-Paket
+- MG-Turm Level 1 Integration als neuer Starter-Turm
+- Danach separater Cleanup: Bogenschützen-Nest entfernen
+- Levelhintergrund einbauen und Path2D/TowerSlots auf den gemalten Hintergrund ausrichten
+
+
+Update [08.07.2026]: MVP-Fokus bewusst von Bogenschützen-Nest auf MG-Turm umgestellt, weil das Bogenschützen-Nest nicht sauber zum Military-Jungle-StyleGuide passt. Bogenschützen-Nest wird nicht sofort gelöscht, sondern bleibt bis zur erfolgreichen MG-Turm-Integration als deprecated Legacy-Starter-Turm erhalten, damit der Prototyp während des Refactors spielbar bleibt. Dornen-Kaserne und Giftschleuder bleiben inhaltlich pausiert, dürfen aber technisch auf die neue AttackBehavior-/TowerBase-Struktur migriert werden.

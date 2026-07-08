@@ -1,6 +1,6 @@
 # Blueprint: Schritte 2–6 zum funktionierenden Level-Hintergrund
 
-**Status:** v1.0 – erstellt nach Approval von Asset_Animation_Architektur_v1.1
+**Status:** v1.1 – aktualisiert nach Feedback: Bogenschützen-Nest bleibt bis MG-Turm-Integration als Legacy-Absicherung erhalten
 **Basis:** `docs/Asset_Animation_Architektur_v1.md` Section 15
 
 ---
@@ -31,133 +31,67 @@ arbeite ich mit einem veralteten Kontext.
 
 ---
 
-## Schritt 2 – Aufräum-Auftrag: Bogenschützen-Nest raus
+## Schritt 2 – Dokumentations-Update: MG-Turm als MVP-Fokus, Bogenschützen-Nest behalten
 
 ### Wer macht was
 
-- **Claude Code** erledigt alle Datei-Änderungen, Löschungen, Commits
-  und Push
-- **Finn** testet das Ergebnis in Godot und triggert danach die
-  Projekt-Sync
+- **Claude Code** aktualisiert nur Dokumentation/Status, keine Gameplay-Dateien
+- **Finn** prüft die geänderten Dokumente und triggert danach die Projekt-Sync
 
 ### Prompt für Claude Code
 
 ```
-Aufraeum-Auftrag: Bogenschuetzen-Nest komplett aus dem Projekt entfernen.
+Dokumentations-Auftrag: MVP-Fokus auf MG-Turm umstellen, Bogenschuetzen-Nest aber vorerst NICHT loeschen.
 
-Kontext: Nach der neuen Asset- und Animations-Architektur v1.1 wird das
-Bogenschuetzen-Nest als erster Turm durch den MG-Turm ersetzt. Der
-Bogenschuetzen-Nest-Turm passt stilistisch nicht zum militaerischen
-Setting und wird komplett aus dem Repo entfernt, nicht als Legacy
-behalten. Der MG-Turm folgt in einem spaeteren Auftrag.
+Kontext: Nach Asset- und Animations-Architektur v1.2 ist der MG-Turm der neue erste MVP-/Referenzturm, weil das Bogenschuetzen-Nest stilistisch nicht zum Military-Jungle-StyleGuide passt. Wichtig: Das Bogenschuetzen-Nest bleibt bis nach erfolgreicher MG-Turm-Integration als deprecated Legacy-Starter-Turm im Projekt, damit der Prototyp waehrend Refactor und Asset-Produktion spielbar bleibt. Es wird jetzt NICHT geloescht.
 
-Dieser Auftrag ist ein reiner Aufraeum- und Umbau-Auftrag. Es wird
-kein neuer Turm hinzugefuegt. Das Spiel ist nach diesem Auftrag temporaer
-nicht bezueglich Turmplatzierung spielbar - das ist beabsichtigt und
-korrekt. Gegner-Wellen, Herzverlust, Game-Over und Verkaufen (soweit
-nichts mehr zu verkaufen ist) muessen weiter funktionieren.
+Dieser Auftrag ist ein reiner Dokumentations- und Status-Auftrag. Es werden keine .gd-, .tscn-, .tres- oder Asset-Dateien geloescht. PrototypeLevel bleibt spielbar wie bisher.
 
 Konkrete Aenderungen:
 
-1. Folgende Dateien LOESCHEN:
-   - scripts/entities/BogenschuetzenNest.gd (+ .uid falls vorhanden)
-   - scenes/towers/BogenschuetzenNest.tscn
-   - resources/towers/bogenschuetzen_nest.tres
-   - assets/sprites/towers/bogenschuetzen_nest.png (+ .import falls
-     vorhanden)
+1. docs/GDD_Jungle_Tower_Defense.md aktualisieren:
+   - Abschnitt 5.2 "Turmtypen": MVP-Fokus von "Bogenschuetzen-Nest" auf "MG-Turm" umstellen.
+   - Beschreibung fuer den MG-Turm:
+     "Fernkampf, Einzelziel, schnelle Feuerrate, mittlerer Schaden. Sockel mit fest zur Kamera gerichtetem Fundament, rotierender MG-Turret auf dem Oberteil, der sich zum Ziel ausrichtet. Standard-DPS-Turm, geeignet gegen einzelne Gegner und Swarms mit hoher Feuerrate."
+   - Bogenschuetzen-Nest nicht als aktiven MVP-Turm fuehren. Falls es im GDD erwaehnt bleibt, nur als "deprecated Legacy-Starter-Turm bis zur MG-Turm-Integration" markieren.
+   - Dornen-Kaserne und Giftschleuder bleiben inhaltlich pausiert, duerfen aber im TowerBase-Refactor technisch migriert werden.
 
-2. scenes/levels/PrototypeLevel.tscn anpassen:
-   - Die ExtResource-Referenzen auf BogenschuetzenNest.tscn und
-     bogenschuetzen_nest.tres entfernen
-   - Der HUD-Node hat aktuell starter_tower_scene und
-     starter_tower_config gesetzt - diese Zuweisungen entfernen
-     (die Properties selbst duerfen leer bleiben)
-
-3. scripts/ui/HUD.gd leer-tolerant machen:
-   - starter_tower_scene und starter_tower_config duerfen null sein
-   - _show_build_menu(slot): wenn starter_tower_config null ist, statt
-     "<Name> (<Kosten> Gold)" den Text "Kein Turm verfuegbar" anzeigen
-     und den _build_confirm_button ausblenden (visible = false).
-     Wenn nicht null: bisheriges Verhalten.
-   - _on_build_confirm_pressed(): am Anfang Guard einbauen -
-     wenn starter_tower_scene oder starter_tower_config null sind,
-     Methode direkt verlassen (kein Crash).
-   - Beim Ausblenden des BuildMenus (_on_build_cancel_pressed und
-     anderswo) den _build_confirm_button.visible wieder auf true
-     zuruecksetzen, damit spaeter wenn ein Turm da ist, er wieder
-     sichtbar ist.
-
-4. docs/GDD_Jungle_Tower_Defense.md aktualisieren:
-   - Abschnitt 5.2 "Turmtypen": Der Eintrag "Bogenschuetzen-Nest" wird
-     entfernt und durch "MG-Turm" ersetzt. Beschreibung fuer den
-     MG-Turm: "Fernkampf, Einzelziel, schnelle Feuerrate, mittlerer
-     Schaden. Sockel mit fest zur Kamera gerichtetem Fundament,
-     rotierender MG-Turret auf dem Oberteil, der sich zum Ziel
-     ausrichtet. Standard-DPS-Turm, geeignet gegen einzelne Gegner
-     und Swarms mit hoher Feuerrate."
-   - Der Text "MVP-Fokus: Bogenschuetzen-Nest" wird ueberall im
-     Abschnitt zu "MVP-Fokus: MG-Turm" korrigiert.
-   - Falls "Bogenschuetzen-Nest" an anderen Stellen im GDD referenziert
-     ist: analog zu "MG-Turm" umbenennen.
-
-5. STATUS.md aktualisieren:
-   - Zeile "1 Turm (Bogenschuetzen-Nest)" auf "1 Turm (MG-Turm, noch
-     nicht produziert)" aendern.
-   - Zeile "Bogenschuetzen-Nest (Turm) und Dschungel-Spaeher (Gegner)
-     sind die EINZIGEN Typen..." auf "MG-Turm (Turm) und
-     Dschungel-Spaeher (Gegner) sind die EINZIGEN Typen..." aendern.
+2. STATUS.md aktualisieren:
+   - Aktueller MVP-Fokus: "MG-Turm (noch nicht produziert)" + "Dschungel-Spaeher".
+   - Bogenschuetzen-Nest als "deprecated Legacy-Starter-Turm, bleibt bis zur erfolgreichen MG-Turm-Integration spielbar im Projekt, wird danach separat entfernt" dokumentieren.
+   - Dornen-Kaserne und Giftschleuder: "inhaltlich pausiert, technische Migration im TowerBase-Refactor erlaubt" dokumentieren.
    - Am Ende einen neuen Update-Eintrag mit heutigem Datum hinzufuegen:
-     "Bogenschuetzen-Nest komplett aus dem Projekt entfernt. MG-Turm
-     ist der neue erste MVP-Turm, wird nach TowerBase-Refactor
-     (Sockel + Turret + AttackBehavior) produziert. Spiel temporaer
-     ohne platzierbaren Turm - dies ist gemaess Asset-Architektur
-     v1.1 Section 15 beabsichtigt."
-   - Die Notiz mit den beiden noch offenen Content-Bausteinen
-     (Turm-Sprite Bogenschuetzen-Nest, Levelhintergrund) am Ende
-     ersetzen durch: "Naechste Content-Bausteine: TowerBase-Refactor
-     (Sockel + Turret + AttackBehavior), dann MG-Turm-Asset-Paket, dann
-     MG-Turm-Integration, dann Level-Hintergrund-Einbau. Details in
-     Asset_Animation_Architektur_v1.md Section 15."
+     "MVP-Fokus von Bogenschuetzen-Nest auf MG-Turm umgestellt. Bogenschuetzen-Nest wird nicht sofort geloescht, sondern bleibt bis zur erfolgreichen MG-Turm-Integration als deprecated Legacy-Starter-Turm erhalten, damit der Prototyp waehrend des Refactors spielbar bleibt. Dornen-Kaserne und Giftschleuder bleiben inhaltlich pausiert, duerfen aber technisch auf die neue AttackBehavior-/TowerBase-Struktur migriert werden."
+   - Naechste Content-Bausteine am Ende ersetzen durch:
+     "Naechste Schritte: TowerBase-Refactor (Sockel + Turret + AttackBehavior) mit Migration der bestehenden Legacy-Tuerme, dann MG-Turm-Asset-Paket, dann MG-Turm-Integration, danach separater Cleanup des Bogenschuetzen-Nests, dann Level-Hintergrund-Einbau. Details in Asset_Animation_Architektur_v1.md Section 15."
 
-6. Commit und Push:
-   - Deutsche Commit-Message: "Bogenschuetzen-Nest komplett entfernt,
-     HUD leer-tolerant gemacht, GDD und STATUS aktualisiert
-     (Vorbereitung fuer MG-Turm nach Asset-Architektur v1.1)"
+3. NICHT tun:
+   - Keine BogenschuetzenNest-Dateien loeschen.
+   - Keine PrototypeLevel.tscn-Referenzen entfernen.
+   - HUD nicht leer-tolerant umbauen, solange das Bogenschuetzen-Nest als Starter-Turm erhalten bleibt.
+   - Keine Gameplay-Logik veraendern.
+
+4. Commit und Push:
+   - Deutsche Commit-Message: "MVP-Fokus auf MG-Turm umgestellt, Bogenschuetzen-Nest als Legacy-Starter behalten"
    - git push zu GitHub.
 
-Der Auftrag ist erst fertig, wenn alle Aenderungen commited und gepusht
-sind. Bei Unklarheiten: nachfragen, nicht raten (CLAUDE.md-Regel).
+Der Auftrag ist erst fertig, wenn alle Aenderungen commited und gepusht sind. Bei Unklarheiten: nachfragen, nicht raten (CLAUDE.md-Regel).
 ```
 
 ### Was danach getestet werden muss
 
-Godot öffnen und Prototype-Level laden. Diese Checkliste prüfen:
+Da Schritt 2 keine Gameplay-Dateien veraendert, reicht ein kurzer Kontrolltest:
 
-- [ ] Godot startet ohne Fehler in der Console (keine "Missing dependency"
-      oder "Cannot load"-Meldungen)
-- [ ] PrototypeLevel.tscn lädt ohne Fehlerdialoge
-- [ ] Spiel starten (F5)
-- [ ] HUD zeigt korrekt an: `Gold: 100`, `Herzen: 20`, `Welle: 0`
-- [ ] Auf einen leeren TowerSlot klicken/tappen
-- [ ] BuildMenu erscheint, zeigt den Text "Kein Turm verfügbar"
-- [ ] Kein "Bauen"-Button sichtbar (nur "Abbrechen")
-- [ ] "Abbrechen" schließt das Menü
-- [ ] "Welle starten" klicken
-- [ ] Gegner (Dschungel-Späher) spawnen und laufen den Pfad entlang
-- [ ] Gegner erreichen das Ende, Herzen sinken
-- [ ] Nach 20 Gegner-Durchläufen: Game-Over-Panel erscheint
-- [ ] "Neustart" funktioniert
-- [ ] Keine Console-Errors während des Spielens
+- [ ] GDD nennt MG-Turm als neuen MVP-Fokus
+- [ ] STATUS.md nennt MG-Turm als neuen MVP-Fokus
+- [ ] STATUS.md dokumentiert Bogenschuetzen-Nest als deprecated Legacy-Starter-Turm bis nach MG-Turm-Integration
+- [ ] STATUS.md dokumentiert, dass Dornen-Kaserne und Giftschleuder inhaltlich pausiert bleiben, aber technisch migriert werden duerfen
+- [ ] Keine BogenschuetzenNest-Dateien wurden geloescht
+- [ ] PrototypeLevel bleibt unveraendert spielbar
 
 ### Freigabe für Schritt 3
 
-Alle Punkte oben grün + Aufräum-Commit ist auf GitHub sichtbar +
-Projekt-Sync im Claude-Projekt getriggert.
-
-**Sonderfall:** Falls Godot beim Öffnen "Missing dependencies" meldet
-und den Fehler nicht selbst reparieren kann, kommt der Bug-Report in
-den Chat, **nicht** manuelles Herumfrickeln in der `.tscn`. Meistens
-liegt es an einer nicht entfernten `ExtResource`-Zeile.
+Alle Punkte oben gruen + Dokumentations-Commit ist auf GitHub sichtbar + Projekt-Sync im Claude-Projekt getriggert.
 
 ---
 
@@ -167,8 +101,9 @@ liegt es an einer nicht entfernten `ExtResource`-Zeile.
 
 - **Claude Code** setzt den kompletten Refactor um (Code + Szenen +
   Configs)
-- **Finn** testet, dass die zwei Legacy-Türme (Dornen-Kaserne,
-  Giftschleuder) nach dem Refactor identisch funktionieren wie vorher
+- **Finn** testet, dass der spielbare Legacy-Starter-Turm (Bogenschützen-Nest)
+  und die beiden pausierten Legacy-Türme (Dornen-Kaserne, Giftschleuder)
+  nach dem Refactor identisch funktionieren wie vorher
 
 ### Prompt für Claude Code
 
@@ -184,10 +119,12 @@ soweit noetig), Section 9 (AttackBehavior), Section 14 Regel 8
 Ziel des Refactors: TowerBase soll nach diesem Auftrag zwei Sprite-Slots
 haben (Base statisch, Turret rotierbar), die Angriffslogik ueber
 AttackBehavior-Resource-Instanzen laufen lassen statt ueber einen
-is_aoe-Bool, und alle bestehenden Turm-Configs (Dornen-Kaserne,
-Giftschleuder) muessen migriert werden. Das Spielverhalten der beiden
-Legacy-Tuerme muss NACH dem Refactor exakt identisch sein zu VOR dem
-Refactor - keine sichtbare oder mechanische Aenderung.
+is_aoe-Bool, und alle bestehenden Turm-Configs (Bogenschuetzen-Nest, Dornen-Kaserne,
+Giftschleuder) muessen migriert werden. Das Spielverhalten des
+Bogenschuetzen-Nests als aktuellem Starter-Turm muss NACH dem Refactor
+exakt identisch sein zu VOR dem Refactor - keine sichtbare oder
+mechanische Aenderung. Dornen-Kaserne und Giftschleuder bleiben
+inhaltlich pausiert, werden aber technisch migriert.
 
 Der MG-Turm wird in diesem Auftrag NICHT gebaut. Nur die
 Infrastruktur.
@@ -237,6 +174,10 @@ Konkrete Aenderungen:
        (Winkeltoleranz, bei der geschossen werden darf)
    - @export var attack_behavior: AttackBehavior
        (ersetzt das bisherige is_aoe-Bool)
+   - @export var muzzle_effect_config: EffectConfig
+       (datengetriebenes Mündungsfeuer; darf bei Legacy-Türmen null sein)
+   - @export var impact_effect_config: EffectConfig
+       (datengetriebener Einschlagseffekt; darf bei Legacy-Türmen null sein)
 
    Bestehende Felder:
    - "texture" umbenennen auf "base_texture" (Feldname direkt aendern,
@@ -313,7 +254,18 @@ Konkrete Aenderungen:
      global_position zurueck (bisheriges Verhalten). Wird von
      AttackBehaviors und beim spaeteren Muzzle-Effect-Spawn genutzt.
 
-5. resources/towers/dornen_kaserne.tres migrieren:
+5. resources/towers/bogenschuetzen_nest.tres migrieren:
+   - "texture" umbenennen auf "base_texture" (gleiche Referenz auf
+     bogenschuetzen_nest.png)
+   - "turret_texture" leer lassen
+   - "turret_rotation_enabled = false"
+   - is_aoe-Feld weg (schon durch TowerConfig-Aenderung erledigt)
+   - Neues Feld attack_behavior: eine Instanz von SingleTargetAttack als
+     SubResource oder Resource-Referenz anlegen
+   - muzzle_effect_config und impact_effect_config leer lassen
+     (Legacy-Turm bleibt optisch unveraendert)
+
+6. resources/towers/dornen_kaserne.tres migrieren:
    - "texture" umbenennen auf "base_texture" (gleiche Referenz auf
      dornen_kaserne.png)
    - "turret_texture" leer lassen
@@ -322,7 +274,7 @@ Konkrete Aenderungen:
    - Neues Feld attack_behavior: eine Instanz von AoEAttack als
      SubResource anlegen
 
-6. resources/towers/giftschleuder.tres migrieren:
+7. resources/towers/giftschleuder.tres migrieren:
    - Analog zu dornen_kaserne.tres:
      - texture -> base_texture
      - turret_texture leer
@@ -331,40 +283,35 @@ Konkrete Aenderungen:
    - dot_damage_per_tick, dot_tick_interval, dot_duration bleiben
      wie sie sind (werden von AoEAttack ausgelesen)
 
-7. scenes/towers/DornenKaserne.tscn und scenes/towers/Giftschleuder.tscn:
-   - Beide Szenen nutzen aktuell einen einzelnen Sprite2D-Node
-     namens "Sprite2D".
-   - Umbenennen des vorhandenen "Sprite2D" auf "Base" (damit
-     TowerBase-Skript ihn ueber $Base findet).
+8. scenes/towers/BogenschuetzenNest.tscn, scenes/towers/DornenKaserne.tscn und scenes/towers/Giftschleuder.tscn:
+   - Falls eine Szene aktuell einen einzelnen Sprite2D-Node namens
+     "Sprite2D" nutzt: Umbenennen des vorhandenen "Sprite2D" auf
+     "Base" (damit TowerBase-Skript ihn ueber $Base findet).
    - KEIN Turret-Node hinzufuegen (Legacy-Opt-out).
    - DetectionArea, CollisionShape2D, FireTimer bleiben wie sie sind.
 
-8. TEMPORAERE Umleitung fuer den Test (WICHTIG):
-   - scenes/levels/PrototypeLevel.tscn: den HUD-Node so anpassen,
-     dass starter_tower_scene = DornenKaserne.tscn und
-     starter_tower_config = dornen_kaserne.tres sind (temporaer, damit
-     der Refactor-Test einen platzierbaren Turm hat). Diese Zuweisung
-     wird in Schritt 5 (MG-Turm-Integration) wieder auf MG-Turm
-     geaendert. Kommentar im .tscn (falls das geht) oder ansonsten
-     im Commit-Text vermerken: "TEMPORAER Dornen-Kaserne als
-     Starter-Turm, wird bei MG-Turm-Integration umgestellt".
+9. PrototypeLevel.tscn / HUD-Starter unveraendert lassen:
+   - starter_tower_scene bleibt BogenschuetzenNest.tscn.
+   - starter_tower_config bleibt bogenschuetzen_nest.tres.
+   - Grund: Der Prototyp soll waehrend des Refactors vollstaendig spielbar
+     bleiben. Der Starter-Turm wird erst in Schritt 5 auf MG-Turm umgestellt.
 
-9. STATUS.md aktualisieren:
+10. STATUS.md aktualisieren:
    - Neuer Update-Eintrag mit heutigem Datum:
      "TowerBase-Refactor kombiniert abgeschlossen: AttackBehavior-
      Komponenten (SingleTargetAttack, AoEAttack) implementiert,
      Sockel/Turret-Struktur in TowerBase eingefuehrt (mit Opt-out
-     ueber turret_rotation_enabled). Dornen-Kaserne und Giftschleuder
+     ueber turret_rotation_enabled). Bogenschuetzen-Nest, Dornen-Kaserne und Giftschleuder
      auf neues System migriert - Verhalten identisch, keine Aenderung
-     im Spielverlauf. TEMPORAER: Dornen-Kaserne als Starter-Turm im
-     HUD, wird bei MG-Turm-Integration umgestellt."
+     im Spielverlauf. Bogenschuetzen-Nest bleibt deprecated Legacy-Starter
+     bis zur MG-Turm-Integration."
 
-10. Commit und Push:
+11. Commit und Push:
     - Deutsche Commit-Message: "TowerBase-Refactor: AttackBehavior-
-      Komponenten + Sockel/Turret-Struktur, Legacy-Tuerme migriert"
+      Komponenten + Sockel/Turret-Struktur, bestehende Legacy-Tuerme migriert"
     - git push zu GitHub.
 
-Bei Unklarheiten: nachfragen, nicht raten. Das Verhalten der beiden
+Bei Unklarheiten: nachfragen, nicht raten. Das Verhalten der bestehenden
 Legacy-Tuerme MUSS identisch bleiben - das ist das Testkriterium.
 ```
 
@@ -372,17 +319,17 @@ Legacy-Tuerme MUSS identisch bleiben - das ist das Testkriterium.
 
 - [ ] Godot startet ohne Errors
 - [ ] PrototypeLevel lädt
-- [ ] Spielen: TowerSlot antippen → BuildMenu zeigt "Dornen-Kaserne (60 Gold)"
-- [ ] Bauen: Dornen-Kaserne erscheint auf dem Slot
+- [ ] Spielen: TowerSlot antippen → BuildMenu zeigt weiterhin "Bogenschützen-Nest" mit korrekten Kosten
+- [ ] Bauen: Bogenschützen-Nest erscheint auf dem Slot
 - [ ] Welle starten, Gegner spawnen
-- [ ] Dornen-Kaserne trifft Gegner in ihrer AoE-Reichweite (kurze Distanz)
+- [ ] Bogenschützen-Nest trifft Gegner wie vor dem Refactor
 - [ ] Gegner nimmt Schaden, Lebensbalken sinkt
 - [ ] Gegner stirbt → Gold-Reward wird gutgeschrieben
-- [ ] Dornen-Kaserne verkaufen funktioniert → Refund kommt in Gold-Zähler
-- [ ] Wichtig: Die Dornen-Kaserne dreht sich **nicht** – sie ist auf
+- [ ] Bogenschützen-Nest verkaufen funktioniert → Refund kommt in Gold-Zähler
+- [ ] Wichtig: Das Bogenschützen-Nest dreht sich **nicht** – es ist als Legacy-Turm auf
       `turret_rotation_enabled = false`, das ist korrekt
 - [ ] Kein visuelles "Zucken" oder Winkel-Wackeln (falls doch: Bug im
-      Rotation-Code, obwohl die Dornen-Kaserne gar keine Rotation haben
+      Rotation-Code, obwohl der Legacy-Turm gar keine Rotation haben
       sollte)
 - [ ] Console bleibt sauber (keine Warnings über null-Zugriffe)
 
@@ -391,7 +338,7 @@ Legacy-Tuerme MUSS identisch bleiben - das ist das Testkriterium.
 Alle Punkte grün + Push auf GitHub + Projekt-Sync getriggert.
 
 **Wichtig:** Der Refactor testet nur die Legacy-Türme. Die eigentliche
-Turret-Rotation kann noch nicht getestet werden, weil kein Turm mit
+Turret-Rotation kann noch nicht getestet werden, weil noch kein Turm mit
 `turret_rotation_enabled = true` existiert. Das kommt in Schritt 5.
 
 ---
@@ -539,10 +486,10 @@ Konkrete Aenderungen:
      anpassen)
    - Root: Node2D mit ProjectileBase.gd
    - Kind: Sprite2D mit projectile_kugel.png statt Polygon2D
-   - Anpassung an ProjectileBase.gd: nach _impact() zusaetzlich zum
-     bisherigen CPUParticles-Puff das kugel_einschlag.tres als
-     EffectBase spawnen. Bevorzugt aber die alte CPUParticles-Loesung
-     komplett durch das EffectBase-System ersetzen - siehe
+   - Anpassung an ProjectileBase.gd: die alte CPUParticles-Loesung
+     komplett durch das EffectBase-System ersetzen. Der Impact-Effekt
+     muss datengetrieben ueber eine exportierte EffectConfig-Referenz
+     gesetzt werden, nicht hart im Code verdrahtet. Siehe
      Asset-Architektur Section 8.3.
 
 6. Neue Resource: resources/towers/mg_turm.tres
@@ -562,6 +509,8 @@ Konkrete Aenderungen:
    - attack_range: 200.0
    - attack_behavior: single_target_attack.tres
    - projectile_scene: ProjectileKugel.tscn
+   - muzzle_effect_config: muendungsfeuer_klein.tres
+   - impact_effect_config: kugel_einschlag.tres
    - (dot-Felder auf 0/leer belassen)
 
 7. Neues Script: scripts/entities/MgTurm.gd
@@ -588,25 +537,33 @@ Konkrete Aenderungen:
 
 9. Muzzle-Effect-Spawn in SingleTargetAttack.gd oder TowerBase.gd:
    - Wenn geschossen wird, zusaetzlich zum Projektil-Spawn ein
-     EffectBase-Node mit muendungsfeuer_klein.tres spawnen
+     EffectBase-Node aus tower_context.config.muzzle_effect_config spawnen
+   - Falls muzzle_effect_config null ist: kein Effekt, kein Crash
    - Position: tower_context.get_muzzle_global_position()
    - Rotation: erbt Turret-Rotation
+   - Impact-Effekt wird ebenfalls datengetrieben aus
+     tower_context.config.impact_effect_config an das Projektil uebergeben
+     oder direkt in ProjectileKugel.tscn exportiert. Keine harte Referenz
+     auf kugel_einschlag.tres im Gameplay-Code.
    (Die genaue Umsetzung ist ein Design-Detail - dokumentiere die
    gewaehlte Loesung im Code-Kommentar)
 
 10. scenes/levels/PrototypeLevel.tscn - HUD anpassen:
     - starter_tower_scene = MgTurm.tscn
     - starter_tower_config = mg_turm.tres
-    - Der temporaere Dornen-Kaserne-Zustand aus Schritt 3 wird damit
-      aufgehoben.
+    - Damit wird das Bogenschuetzen-Nest als deprecated Legacy-Starter
+      abgeloest. Es bleibt noch im Repo, wird aber nicht mehr als
+      Starter-Turm verwendet.
 
 11. STATUS.md aktualisieren:
     - Neuer Update-Eintrag mit heutigem Datum:
       "MG-Turm Level 1 vollstaendig integriert. Erster Turm nach
-      Asset-Architektur v1.1 (Sockel + rotierender Turret,
+      Asset-Architektur v1.2 (Sockel + rotierender Turret,
       SingleTargetAttack, mit Muendungsfeuer, MG-Kugel-Projektil,
       Impact-Effekt). Spiel ist wieder vollstaendig spielbar.
-      Referenz-Muster fuer alle weiteren Turmproduktionen."
+      Referenz-Muster fuer alle weiteren Turmproduktionen.
+      Bogenschuetzen-Nest ist ab jetzt nicht mehr Starter-Turm und kann
+      nach erfolgreichem Test in einem separaten Cleanup-Auftrag entfernt werden."
 
 12. Commit und Push:
     - Deutsche Commit-Message: "MG-Turm Level 1 integriert:
@@ -647,6 +604,15 @@ Alle Punkte grün + Push auf GitHub + Projekt-Sync getriggert.
 Falls die Rotation ruckelt, das Mündungsfeuer an falscher Position
 spawnt, oder das Projektil aus dem Sockel statt der Mündung kommt:
 **Bug-Report in den Chat, nicht weitermachen.**
+
+### Optionaler Cleanup nach Schritt 5 – Bogenschützen-Nest entfernen
+
+Erst wenn Schritt 5 vollständig grün ist, kann ein separater Cleanup-Auftrag
+folgen: BogenschützenNest.gd, BogenschuetzenNest.tscn,
+bogenschuetzen_nest.tres und zugehörige PNG/.import-Dateien löschen,
+ExtResource-Referenzen entfernen, GDD/STATUS final bereinigen, Commit/Push.
+Dieser Cleanup ist bewusst **nicht** Teil des Refactors, damit der Prototyp
+bis zur MG-Turm-Integration spielbar bleibt.
 
 ---
 
@@ -841,7 +807,7 @@ die bekommst du dann als eigenen, kleineren Blueprint.
 Beim Abarbeiten hilft es, folgendes offen zu haben:
 
 1. **Dieses Blueprint-Dokument** (als Referenz)
-2. **Asset-Architektur v1.1** (`docs/Asset_Animation_Architektur_v1.md`)
+2. **Asset-Architektur v1.2** (`docs/Asset_Animation_Architektur_v1.md`)
 3. **StyleGuide** (`docs/StyleGuide_Jungle_Tower_Defense.md`)
 4. **Prompt-Baukasten** (`docs/Prompt_Baukasten_Assets.md`)
 5. **Godot 4.7 mit dem Projekt geöffnet**

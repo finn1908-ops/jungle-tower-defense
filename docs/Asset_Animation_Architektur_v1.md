@@ -1,6 +1,6 @@
 # Asset- & Animations-Architektur v1: Jungle Tower Defense
 
-**Status:** v1.1 – verbindlich ab diesem Datum (siehe Änderungshistorie am Ende)
+**Status:** v1.2 – verbindlich ab diesem Datum (siehe Änderungshistorie am Ende)
 **Engine:** Godot 4.7, GDScript, Mobile-Renderer
 **Verhältnis zu anderen Dokumenten:**
 Dieses Dokument **ergänzt** `Architektur_Jungle_Tower_Defense.md`, ohne dessen
@@ -501,11 +501,16 @@ Konkrete Effekte sind dann einfach `.tres`-Dateien:
 ### 8.3 Wer spawnt Effekte?
 
 - **Muzzle-Effekt** wird vom Turm gespawnt, sobald geschossen wird
-  (`TowerBase` bekommt neues Feld `muzzle_effect: EffectConfig`, spawnt
-  eine `EffectBase`-Instanz beim Schuss an der eigenen Position)
+  (`TowerConfig` bekommt ein datengetriebenes Feld
+  `muzzle_effect_config: EffectConfig`; `TowerBase` oder die aktive
+  `AttackBehavior` spawnt daraus eine `EffectBase`-Instanz an
+  `get_muzzle_global_position()`. Kein Mündungsfeuer wird hart im Code
+  verdrahtet.)
 - **Impact-Effekt** wird vom Projektil gespawnt beim Aufprall
-  (`ProjectileBase._impact()` ersetzt die aktuelle inline
-  `CPUParticles2D`-Lösung)
+  (`ProjectileBase` bekommt ein datengetriebenes Feld
+  `impact_effect_config: EffectConfig`; `_impact()` spawnt daraus eine
+  `EffectBase`-Instanz. Die aktuelle inline-`CPUParticles2D`-Lösung
+  wird dadurch ersetzt. Kein Impact-Effekt wird hart im Code verdrahtet.)
 - **Death-Effekt** (Explosion, Rauch) wird vom Gegner in seiner
   `DEATH`-State gespawnt
 - **Hit-Flash** ist **kein** Effekt in diesem Sinne, sondern ein Shader
@@ -579,6 +584,8 @@ Aktuell:
 Neu:
 ```gdscript
 @export var attack_behavior: AttackBehavior
+@export var muzzle_effect_config: EffectConfig
+@export var impact_effect_config: EffectConfig
 ```
 
 `is_aoe`, `dot_damage_per_tick`, `dot_tick_interval`, `dot_duration`
@@ -588,14 +595,21 @@ werden **nicht** entfernt – sie bleiben als Parameter der jeweiligen
 
 ### 9.3 Migration der bestehenden Configs
 
-Nach der Entscheidung, das Bogenschützen-Nest komplett aus dem Projekt
-zu entfernen (Lösung A, klarer Schnitt) bleiben zur Migration:
+Nach der Entscheidung, das Bogenschützen-Nest stilistisch abzulösen, aber
+bis zur erfolgreichen MG-Turm-Integration spielbar im Projekt zu behalten,
+werden zur Migration ausdrücklich **alle bestehenden Turm-Configs**
+berücksichtigt:
 
+- `bogenschuetzen_nest.tres` → bleibt temporärer Legacy-Starter-Turm,
+  bekommt `attack_behavior: SingleTargetAttack`, bleibt als monolithisches
+  `base_texture` mit `turret_rotation_enabled = false` erhalten und wird
+  erst nach erfolgreicher MG-Turm-Integration in einem separaten
+  Cleanup-Auftrag entfernt.
 - `dornen_kaserne.tres` → bekommt `attack_behavior: AoEAttack` (Nahkampf-
   Interimslösung gemäß GDD; bleibt außerdem auf
-  `turret_rotation_enabled = false`)
+  `turret_rotation_enabled = false`).
 - `giftschleuder.tres` → bekommt `attack_behavior: AoEAttack` mit
-  Gift-DoT-Konfiguration
+  Gift-DoT-Konfiguration.
 
 Der neue **MG-Turm** (`mg_turm.tres`, siehe Ausblick Section 15) wird als
 erster Turm nach der neuen Architektur produziert: `SingleTargetAttack`
@@ -827,11 +841,14 @@ und den `CLAUDE.md`-Regeln gelten ab jetzt:
 7. **Deutsche Commit-Messages und Push nach jedem Auftrag** bleibt
    unverändert Pflicht (CLAUDE.md).
 
-8. **Türme werden ab v1.1 standardmäßig als Sockel + Turret gebaut.** Die
-   `TowerBase.tscn` enthält zwei Sprite-Slots (`Base` statisch, `Turret`
-   rotierbar) plus einen `MuzzlePoint`-Marker-Node im Turret. `TowerConfig`
-   trägt separate Felder `base_texture`, `turret_texture`,
-   `turret_rotation_enabled: bool` und `turret_rotation_speed: float`.
+8. **Türme werden ab v1.2 standardmäßig als Sockel + Turret gebaut.**
+   `TowerBase` ist dabei **das gemeinsame Skript**, nicht zwingend eine
+   eigene Basisszene. Jede konkrete Turm-Szene enthält standardmäßig die
+   Node-Struktur `Base` (Sprite2D, statisch), `Turret` (Node2D, rotierbar),
+   `TurretSprite`, `MuzzlePoint`, `DetectionArea` und `FireTimer`.
+   `TowerConfig` trägt separate Felder `base_texture`, `turret_texture`,
+   `turret_rotation_enabled: bool`, `turret_rotation_speed: float`,
+   `attack_behavior`, `muzzle_effect_config` und `impact_effect_config`.
    Türme ohne sinnvolle Rotation setzen `turret_rotation_enabled = false`
    und dürfen `turret_texture` leer lassen – dann ist der Turm optisch
    ein einzelnes Bild aus `base_texture`. Das Opt-out muss im
@@ -844,36 +861,35 @@ und den `CLAUDE.md`-Regeln gelten ab jetzt:
 ## 15. Was als Nächstes ansteht (Ausblick)
 
 Diese Doku ist die Grundlage. Der konkrete Umsetzungsplan (angepasst
-für v1.1 nach der Entscheidung, Bogenschützen-Nest zu entfernen und den
-MG-Turm als neuen ersten Turm einzuführen) sieht folgende Reihenfolge
-vor:
+für v1.2 nach der Entscheidung, das Bogenschützen-Nest stilistisch
+abzulösen, aber bis zur erfolgreichen MG-Turm-Integration als funktionale
+Legacy-Absicherung im Projekt zu behalten) sieht folgende Reihenfolge vor:
 
-1. **Diese Doku (v1.1) wird approved.** Finn liest sie durch und sagt
+1. **Diese Doku (v1.2) wird approved.** Finn liest sie durch und sagt
    "ok" oder markiert Änderungswünsche.
-2. **Aufräum-Auftrag** an Claude Code: Bogenschützen-Nest komplett aus
-   dem Projekt entfernen (`.gd`, `.tscn`, `.tres`, `.png`). HUD wird
-   leer-tolerant gemacht: `starter_tower_scene` und `starter_tower_config`
-   dürfen leer sein, das BuildMenu zeigt in diesem Zustand einen
-   Info-Hinweis "Kein Turm verfügbar" und bietet keinen Bauen-Button.
-   GDD 5.2 und STATUS.md werden entsprechend aktualisiert (MG-Turm
-   ersetzt Bogenschützen-Nest im MVP-Fokus). Das Spiel ist temporär
-   nicht spielbar bezüglich Turmplatzierung – Gegner-Wellen, Herzverlust
-   und Game-Over funktionieren weiter.
+2. **Dokumentations- und Status-Auftrag** an Claude Code: GDD und STATUS.md
+   werden auf den neuen MVP-Fokus **MG-Turm** umgestellt. Das
+   Bogenschützen-Nest wird als **deprecated Legacy-Starter-Turm** markiert,
+   aber noch nicht gelöscht. So bleibt der Prototyp während des Refactors
+   vollständig spielbar.
 3. **TowerBase-Refactor kombiniert**: AttackBehavior-Komponenten +
    Sockel/Turret-Aufbau + Turret-Rotation in einem Zug, weil beides
-   `TowerBase.tscn` und `TowerConfig.gd` betrifft. Dornen-Kaserne und
-   Giftschleuder werden migriert (bekommen `AttackBehavior`, bleiben
-   auf `turret_rotation_enabled = false` und monolithischem `base`-Sprite –
-   Legacy-Zustand mit dokumentiertem Opt-out). Verhalten des Spiels muss
-   identisch bleiben, sichtbar geändert wird nichts.
+   `TowerBase.gd` und `TowerConfig.gd` betrifft. Bogenschützen-Nest,
+   Dornen-Kaserne und Giftschleuder werden technisch migriert (bekommen
+   `AttackBehavior`, bleiben auf `turret_rotation_enabled = false` und
+   monolithischem `base_texture` – Legacy-Zustand mit dokumentiertem
+   Opt-out). Verhalten des Spiels muss identisch bleiben, sichtbar geändert
+   wird nichts.
 4. **Erstes Asset-Paket-Dokument:** `asset_paket_mg_turm_lvl1.md`
    (Sockel, Turret, Mündungsfeuer, Impact-Effekt, Projektil, optional
    Fire-Frame des Turrets, Icon). Prompt-für-Prompt-Ablauf gemäß
    Pipeline in Section 12.
-5. **MG-Turm integrieren** ← *"Ab hier ist das Spiel wieder vollständig
-   spielbar"*: `.tres`, `.tscn`, HUD auf MG-Turm als neuen
-   `starter_tower` umbiegen. Erster Turm nach der neuen Architektur, wird
-   zum Referenz-Muster für alle weiteren Turmproduktionen.
+5. **MG-Turm integrieren**: `.tres`, `.tscn`, HUD auf MG-Turm als neuen
+   `starter_tower` umbiegen. Ab hier ist das Bogenschützen-Nest nicht mehr
+   als funktionale Absicherung nötig. Der MG-Turm ist der erste Turm nach
+   der neuen Architektur und wird zum Referenz-Muster für alle weiteren
+   Turmproduktionen. Das Bogenschützen-Nest wird erst danach in einem
+   separaten Cleanup-Auftrag entfernt, nicht im Refactor.
 6. **Level-Hintergrund-Einbau** ← *"damit direkt mit einem
    funktionsfähigen Turm getestet werden kann"*, als eigenständiger
    Auftrag (`level_01_jungle_background.png`, präzise Path2D-Ausrichtung
@@ -895,6 +911,20 @@ wenn Legacy-Config aktiviert wird).
 ---
 
 ## Änderungshistorie
+
+**v1.2 (08. Juli 2026):**
+- Bogenschützen-Nest wird nicht mehr vor der MG-Turm-Integration gelöscht.
+  Es bleibt temporär als deprecated Legacy-Starter-Turm erhalten, damit der
+  Prototyp während des Refactors vollständig spielbar bleibt.
+- Widerspruch zu `TowerBase.tscn` geklärt: `TowerBase` ist das gemeinsame
+  Skript; jede konkrete Turm-Szene enthält die Standardstruktur
+  `Base`/`Turret`/`MuzzlePoint`/`DetectionArea`/`FireTimer`.
+- `TowerConfig` um datengetriebene Effekt-Felder
+  `muzzle_effect_config` und `impact_effect_config` ergänzt, damit
+  Mündungsfeuer und Einschlag nicht hart im Code verdrahtet werden.
+- Migration der bestehenden Turm-Configs präzisiert: Bogenschützen-Nest,
+  Dornen-Kaserne und Giftschleuder dürfen technisch migriert werden, auch
+  wenn sie inhaltlich pausiert bzw. deprecated sind.
 
 **v1.1 (07. Juli 2026):**
 - Bogenschützen-Nest als erster Turm entfernt (stilistischer Bruch mit
