@@ -5,7 +5,12 @@ class_name TowerBase
 
 @onready var _fire_timer: Timer = $FireTimer
 @onready var _detection_shape: CollisionShape2D = $DetectionArea/CollisionShape2D
-@onready var _sprite: Sprite2D = $Sprite2D
+# Sockel- und (optionale) Turret-Nodes. Legacy-Türme besitzen kein Turret;
+# get_node_or_null liefert dann null und die Rotation wird übersprungen.
+@onready var _base_sprite: Sprite2D = get_node_or_null("Base")
+@onready var _turret: Node2D = get_node_or_null("Turret")
+@onready var _turret_sprite: Sprite2D = get_node_or_null("Turret/TurretSprite")
+@onready var _muzzle: Marker2D = get_node_or_null("Turret/MuzzlePoint")
 
 var _current_target: EnemyBase = null
 
@@ -13,8 +18,10 @@ func _ready() -> void:
 	if config == null:
 		push_warning("TowerBase '%s': kein TowerConfig zugewiesen" % name)
 		return
-	if _sprite and config.texture:
-		_sprite.texture = config.texture
+	if _base_sprite and config.base_texture:
+		_base_sprite.texture = config.base_texture
+	if _turret_sprite and config.turret_texture:
+		_turret_sprite.texture = config.turret_texture
 	if _detection_shape.shape is CircleShape2D:
 		var shape: CircleShape2D = _detection_shape.shape.duplicate()
 		shape.radius = config.attack_range
@@ -24,40 +31,46 @@ func _ready() -> void:
 	_fire_timer.start()
 	GameState.game_over.connect(_on_game_over)
 
-func _on_fire_timer_timeout() -> void:
-	if config.is_aoe:
-		_fire_aoe()
-	else:
-		_fire_single()
-
-func _fire_single() -> void:
-	var target := _find_target()
+## Turret dreht sich zum Ziel. Legacy-Türme (kein Turret bzw. Rotation aus)
+## überspringen diesen Schritt komplett und verhalten sich unverändert.
+func _process(delta: float) -> void:
+	if not _is_turret_active():
+		return
+	var target := find_target()
 	if target == null:
 		return
-	if config.projectile_scene:
-		_fire_projectile(target)
-	else:
-		_apply_hit(target)
+	var target_angle: float = (target.global_position - global_position).angle()
+	# rotate_toward clamped die Änderung und behandelt den Winkel-Wraparound,
+	# damit die Rotation nicht wackelt oder überschwingt.
+	_turret.rotation = rotate_toward(_turret.rotation, target_angle, config.turret_rotation_speed * delta)
 
-func _fire_projectile(target: EnemyBase) -> void:
-	var projectile: ProjectileBase = config.projectile_scene.instantiate()
-	get_tree().current_scene.add_child(projectile)
-	projectile.global_position = global_position
-	projectile.launch(target, _apply_hit)
+func _on_fire_timer_timeout() -> void:
+	if config.attack_behavior == null:
+		return
+	if find_target() == null:
+		return
+	# Bei drehbarem Turret erst schießen, wenn er ausreichend ausgerichtet ist.
+	if _is_turret_active() and not _is_turret_aligned():
+		return
+	config.attack_behavior.fire(self)
 
-func _fire_aoe() -> void:
-	for enemy in get_tree().get_nodes_in_group("enemies"):
-		if not is_instance_valid(enemy):
-			continue
-		if global_position.distance_to(enemy.global_position) <= config.attack_range:
-			_apply_hit(enemy)
+func _is_turret_active() -> bool:
+	return config.turret_rotation_enabled and _turret != null and config.turret_texture != null
 
-func _apply_hit(enemy: EnemyBase) -> void:
-	enemy.take_damage(config.damage)
-	if config.dot_duration > 0.0:
-		enemy.apply_poison(config.dot_damage_per_tick, config.dot_tick_interval, config.dot_duration)
+func _is_turret_aligned() -> bool:
+	var target := find_target()
+	if target == null:
+		return false
+	var target_angle: float = (target.global_position - global_position).angle()
+	var diff: float = abs(angle_difference(_turret.global_rotation, target_angle))
+	return diff <= deg_to_rad(config.turret_alignment_tolerance_deg)
 
-func _find_target() -> EnemyBase:
+## Sucht das Ziel (höchster Pfad-Fortschritt in Reichweite) und cached es.
+## Öffentlich (kein Underscore-Prefix), weil die AttackBehavior-Komponenten
+## es über tower_context.find_target() aufrufen. Gewählt gegenüber einem
+## zusätzlichen get_current_target()-Wrapper, weil das nur ein Umbenennen
+## ohne neue Methode ist – weniger bewegliche Teile, keine Doppel-API.
+func find_target() -> EnemyBase:
 	if is_instance_valid(_current_target):
 		if global_position.distance_to(_current_target.global_position) <= config.attack_range:
 			return _current_target
@@ -76,6 +89,13 @@ func _find_target() -> EnemyBase:
 			best_progress = progress
 	_current_target = best
 	return best
+
+## Globale Mündungsposition für Projektil-/Muzzle-Effekt-Spawn. Ohne
+## MuzzlePoint (Legacy-Turm) fällt sie auf die Turm-Position zurück.
+func get_muzzle_global_position() -> Vector2:
+	if _muzzle:
+		return _muzzle.global_position
+	return global_position
 
 func _on_game_over() -> void:
 	_fire_timer.stop()

@@ -1,18 +1,23 @@
-[gd_resource type="Resource" load_steps=3 format=3]
+[gd_resource type="Resource" load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scripts/resources/TowerConfig.gd" id="1"]
 [ext_resource type="Texture2D" path="res://assets/sprites/towers/giftschleuder.png" id="2"]
+[ext_resource type="Script" path="res://scripts/entities/attack_behaviors/AoEAttack.gd" id="3"]
+
+[sub_resource type="Resource" id="AoEAttack_1"]
+script = ExtResource("3")
 
 [resource]
 script = ExtResource("1")
 display_name = "Giftschleuder"
-texture = ExtResource("2")
+base_texture = ExtResource("2")
+turret_rotation_enabled = false
 cost = 70
 sell_refund_percent = 0.7
 damage = 2
 fire_rate = 1.2
 attack_range = 130.0
-is_aoe = true
+attack_behavior = SubResource("AoEAttack_1")
 dot_damage_per_tick = 2
 dot_tick_interval = 0.5
 dot_duration = 3.0

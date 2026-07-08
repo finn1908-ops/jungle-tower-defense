@@ -51,3 +51,6 @@ Nächste Schritte: TowerBase-Refactor (Sockel + Turret + AttackBehavior) mit Mig
 
 
 Update [08.07.2026]: MVP-Fokus bewusst von Bogenschützen-Nest auf MG-Turm umgestellt, weil das Bogenschützen-Nest nicht sauber zum Military-Jungle-StyleGuide passt. Bogenschützen-Nest wird nicht sofort gelöscht, sondern bleibt bis zur erfolgreichen MG-Turm-Integration als deprecated Legacy-Starter-Turm erhalten, damit der Prototyp während des Refactors spielbar bleibt. Dornen-Kaserne und Giftschleuder bleiben inhaltlich pausiert, dürfen aber technisch auf die neue AttackBehavior-/TowerBase-Struktur migriert werden.
+
+
+Update [08.07.2026]: TowerBase-Refactor kombiniert abgeschlossen: AttackBehavior-Komponenten (SingleTargetAttack, AoEAttack) implementiert, Sockel/Turret-Struktur in TowerBase eingeführt (mit Opt-out über turret_rotation_enabled). Bogenschützen-Nest, Dornen-Kaserne und Giftschleuder auf neues System migriert - Verhalten identisch, keine Änderung im Spielverlauf. Bogenschützen-Nest bleibt deprecated Legacy-Starter bis zur MG-Turm-Integration.

@@ -1,19 +1,24 @@
-[gd_resource type="Resource" load_steps=4 format=3]
+[gd_resource type="Resource" load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scripts/resources/TowerConfig.gd" id="1"]
 [ext_resource type="Texture2D" path="res://assets/sprites/towers/bogenschuetzen_nest.png" id="2"]
 [ext_resource type="PackedScene" path="res://scenes/towers/ProjectileBase.tscn" id="3"]
+[ext_resource type="Script" path="res://scripts/entities/attack_behaviors/SingleTargetAttack.gd" id="4"]
+
+[sub_resource type="Resource" id="SingleTargetAttack_1"]
+script = ExtResource("4")
 
 [resource]
 script = ExtResource("1")
 display_name = "Bogenschützen-Nest"
-texture = ExtResource("2")
+base_texture = ExtResource("2")
+turret_rotation_enabled = false
 cost = 50
 sell_refund_percent = 0.7
 damage = 6
 fire_rate = 0.3
 attack_range = 220.0
-is_aoe = false
+attack_behavior = SubResource("SingleTargetAttack_1")
 dot_damage_per_tick = 0
 dot_tick_interval = 1.0
 dot_duration = 0.0
