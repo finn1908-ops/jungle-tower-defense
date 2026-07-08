@@ -47,13 +47,7 @@ bleiben; Photopea-Freistellung ist Pflicht, auch bei scheinbar
 transparentem Hintergrund; Posen bodenbündig statt gleichmäßig gedrittelt
 ausrichten) wurde in Prompt_Baukasten_Assets.md dauerhaft dokumentiert.
 
-Nächste offene Content-Bausteine für den vertikalen Durchstich (1 Turm,
-1 Gegner, 1 Level mit Pfad):
-- TowerBase-Refactor (Sockel + Turret + AttackBehavior) mit technischer Migration der bestehenden Legacy-Türme
-- MG-Turm Level 1 Asset-Paket
-- MG-Turm Level 1 Integration als neuer Starter-Turm
-- Danach separater Cleanup: Bogenschützen-Nest entfernen
-- Levelhintergrund einbauen und Path2D/TowerSlots auf den gemalten Hintergrund ausrichten
+Nächste Schritte: TowerBase-Refactor (Sockel + Turret + AttackBehavior) mit Migration der bestehenden Legacy-Türme, dann MG-Turm-Asset-Paket, dann MG-Turm-Integration, danach separater Cleanup des Bogenschützen-Nests, dann Level-Hintergrund-Einbau. Details in Asset_Animation_Architektur_v1.md Section 15.
 
 
 Update [08.07.2026]: MVP-Fokus bewusst von Bogenschützen-Nest auf MG-Turm umgestellt, weil das Bogenschützen-Nest nicht sauber zum Military-Jungle-StyleGuide passt. Bogenschützen-Nest wird nicht sofort gelöscht, sondern bleibt bis zur erfolgreichen MG-Turm-Integration als deprecated Legacy-Starter-Turm erhalten, damit der Prototyp während des Refactors spielbar bleibt. Dornen-Kaserne und Giftschleuder bleiben inhaltlich pausiert, dürfen aber technisch auf die neue AttackBehavior-/TowerBase-Struktur migriert werden.
