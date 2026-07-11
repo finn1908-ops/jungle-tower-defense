@@ -1,0 +1,37 @@
+# Veröffentlicht den Ordner health-app/ als GitHub-Pages-Seite.
+# Voraussetzung (einmalig): Repo-Settings → Pages → Source = "GitHub Actions".
+name: Health-App auf GitHub Pages veroeffentlichen
+
+on:
+  push:
+    branches: [main]
+    paths: ['health-app/**', '.github/workflows/deploy-health-app.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Repo auschecken
+        uses: actions/checkout@v4
+      - name: Pages konfigurieren
+        uses: actions/configure-pages@v5
+      - name: App-Ordner als Artefakt hochladen
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: health-app
+      - name: Auf GitHub Pages deployen
+        id: deployment
+        uses: actions/deploy-pages@v4
