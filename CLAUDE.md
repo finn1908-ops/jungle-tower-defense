@@ -50,3 +50,13 @@ deutschen Commit-Message committen und zu GitHub pushen (git push). Kein
 
 Auftrag gilt als fertig, bevor gepusht wurde.
 
+Vor jedem Integrationsauftrag oder Asset-Paket mit Codebezug müssen die
+
+betroffenen aktuellen Skripte und Config-Klassen geprüft werden.
+
+Claude/Claude Code darf keine hypothetischen Feldnamen, Szenenstrukturen
+
+oder Dateipfade verwenden. Wenn Dokumentation und Code voneinander
+
+abweichen, nachfragen und nicht raten.
+

@@ -1,0 +1,35 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/entities/MgTurm.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/towers/mg_turm.tres" id="2"]
+[ext_resource type="Texture2D" path="res://assets/sprites/towers/tower_mg_turm_lvl1_base.png" id="3"]
+[ext_resource type="Texture2D" path="res://assets/sprites/towers/tower_mg_turm_lvl1_turret.png" id="4"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1"]
+radius = 200.0
+
+[node name="MgTurm" type="Node2D"]
+script = ExtResource("1")
+config = ExtResource("2")
+
+[node name="Base" type="Sprite2D" parent="."]
+texture = ExtResource("3")
+scale = Vector2(0.13, 0.13)
+
+[node name="Turret" type="Node2D" parent="."]
+
+[node name="TurretSprite" type="Sprite2D" parent="Turret"]
+texture = ExtResource("4")
+scale = Vector2(0.13, 0.13)
+
+[node name="MuzzlePoint" type="Marker2D" parent="Turret"]
+position = Vector2(23.53, -2.73)
+
+[node name="DetectionArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea"]
+shape = SubResource("CircleShape2D_1")
+
+[node name="FireTimer" type="Timer" parent="."]

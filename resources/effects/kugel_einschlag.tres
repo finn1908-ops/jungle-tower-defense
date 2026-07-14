@@ -1,0 +1,40 @@
+[gd_resource type="Resource" load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/EffectConfig.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/effects/effect_kugel_einschlag_sheet.png" id="2"]
+
+[sub_resource type="AtlasTexture" id="Atlas_1"]
+atlas = ExtResource("2")
+region = Rect2(0, 0, 512, 1024)
+
+[sub_resource type="AtlasTexture" id="Atlas_2"]
+atlas = ExtResource("2")
+region = Rect2(512, 0, 512, 1024)
+
+[sub_resource type="AtlasTexture" id="Atlas_3"]
+atlas = ExtResource("2")
+region = Rect2(1024, 0, 512, 1024)
+
+[sub_resource type="SpriteFrames" id="Frames_1"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Atlas_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("Atlas_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("Atlas_3")
+}],
+"loop": false,
+"name": &"play",
+"speed": 12.0
+}]
+
+[resource]
+script = ExtResource("1")
+sprite_frames = SubResource("Frames_1")
+animation_name = "play"
+scale = Vector2(0.1, 0.1)
+z_index = 5

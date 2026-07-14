@@ -83,11 +83,13 @@ Zickzack, Kreuzung), steigende Schwierigkeit.
 **Aktualisiert nach Asset- und Animations-Architektur v1.2:** Um die
 Content-Produktion nicht auf mehrere Türme gleichzeitig zu verteilen,
 konzentriert sich der aktuelle MVP-Durchlauf auf **MG-Turm Level 1**.
-Das frühere Bogenschützen-Nest passt stilistisch nicht sauber zum
-Military-Jungle-StyleGuide und wird nicht weiter als MVP-Turm geführt.
-Es bleibt nur temporär als deprecated Legacy-Starter-Turm im Projekt,
-bis der MG-Turm erfolgreich integriert ist; danach wird es in einem
-separaten Cleanup entfernt.
+Der MG-Turm ist inzwischen integriert und **aktiver Starter-Turm** im
+BuildMenu (Sockel/Turret-Architektur mit datengetriebenem Mündungsfeuer
+und Einschlagseffekt über das EffectBase-System). Das frühere
+Bogenschützen-Nest passt stilistisch nicht sauber zum
+Military-Jungle-StyleGuide und ist **aus dem BuildMenu entfernt**; seine
+Dateien bleiben vorerst als deprecated Legacy im Repo und werden erst in
+einem separaten Cleanup-Auftrag gelöscht.
 
 Dornen-Kaserne und Giftschleuder sind technisch bereits als Szenen/Configs
 angelegt (siehe Architektur-Dokument) und bleiben inhaltlich pausiert.
@@ -97,10 +99,10 @@ Content-Ziele produziert.
 
 | Turm | Typ | Rolle | Beschreibung |
 |---|---|---|---|
-| **MG-Turm** *(MVP-Fokus)* | Fernkampf, Einzelziel | Standard-DPS, schnelle Feuerrate | Sockel mit fest zur Kamera gerichtetem Fundament, rotierender MG-Turret auf dem Oberteil, der sich zum Ziel ausrichtet. Geeignet gegen einzelne Gegner und Swarms mit hoher Feuerrate. |
+| **MG-Turm** *(MVP-Fokus, aktiver Starter-Turm)* | Fernkampf, Einzelziel | Standard-DPS, schnelle Feuerrate | Sockel mit fest zur Kamera gerichtetem Fundament, rotierender MG-Turret auf dem Oberteil, der sich zum Ziel ausrichtet. Geeignet gegen einzelne Gegner und Swarms mit hoher Feuerrate. Integriert nach neuer Sockel/Turret-Architektur inkl. EffectBase-Effekten. |
 | **Dornen-Kaserne** *(vorbereitet, pausiert)* | Nahkampf-Blocker | Pfad blockieren | Spawnt später 2-3 Kämpfer, die auf dem Pfad stehen und Gegner aufhalten; aktuell inhaltlich pausiert und technisch nur als Interimslösung vorhanden. |
 | **Giftschleuder** *(vorbereitet, pausiert)* | Fläche, Damage-over-Time | Gegen Gruppen | Trifft mehrere Gegner in einem Radius, Gift-Schaden über Zeit; inhaltlich pausiert, technische Migration auf AttackBehavior erlaubt. |
-| **Bogenschützen-Nest** *(deprecated Legacy, temporär)* | Fernkampf, Einzelziel | Übergangs-Starter | Bleibt nur bis zur erfolgreichen MG-Turm-Integration spielbar im Projekt, wird danach entfernt. Nicht mehr MVP-Fokus. |
+| **Bogenschützen-Nest** *(deprecated Legacy, aus BuildMenu entfernt)* | Fernkampf, Einzelziel | Übergangs-Starter | Nach MG-Turm-Integration aus dem BuildMenu entfernt. Szene/Config bleiben vorerst im Repo, Entfernung erst im separaten Cleanup-Auftrag. Nicht mehr MVP-Fokus. |
 
 Jeder finale Turm: 3 Ausbaustufen (Level 1-3), Kosten und Werte steigend.
 

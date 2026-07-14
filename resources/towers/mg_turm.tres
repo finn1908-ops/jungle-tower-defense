@@ -1,0 +1,30 @@
+[gd_resource type="Resource" load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/TowerConfig.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/towers/tower_mg_turm_lvl1_base.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/sprites/towers/tower_mg_turm_lvl1_turret.png" id="3"]
+[ext_resource type="Script" path="res://scripts/entities/attack_behaviors/SingleTargetAttack.gd" id="4"]
+[ext_resource type="Resource" path="res://resources/effects/muendungsfeuer_klein.tres" id="5"]
+[ext_resource type="Resource" path="res://resources/effects/kugel_einschlag.tres" id="6"]
+[ext_resource type="PackedScene" path="res://scenes/towers/MgProjectile.tscn" id="7"]
+
+[sub_resource type="Resource" id="SingleTargetAttack_1"]
+script = ExtResource("4")
+
+[resource]
+script = ExtResource("1")
+display_name = "MG-Turm"
+base_texture = ExtResource("2")
+turret_texture = ExtResource("3")
+turret_rotation_enabled = true
+turret_rotation_speed = 6.0
+turret_alignment_tolerance_deg = 5.0
+cost = 50
+sell_refund_percent = 0.7
+damage = 4
+fire_rate = 0.2
+attack_range = 200.0
+attack_behavior = SubResource("SingleTargetAttack_1")
+muzzle_effect_config = ExtResource("5")
+impact_effect_config = ExtResource("6")
+projectile_scene = ExtResource("7")

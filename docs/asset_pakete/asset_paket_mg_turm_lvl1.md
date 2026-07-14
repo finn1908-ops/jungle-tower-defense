@@ -251,7 +251,7 @@ Sobald `tower_mg_turm_lvl1_turret.png` fertig freigestellt in Photopea
 vorliegt, muss der exakte Pixel-Offset des Mündungspunkts (Ende des
 Laufs) relativ zur Bildmitte/Drehachse gemessen und hier notiert werden:
 
-- MuzzlePoint-Offset (x, y in Pixern, relativ zum Turret-Pivot): `___`
+MuzzlePoint-Offset (x, y in Pixeln, relativ zum Turret-Pivot): (181, -21)
 
 Dieser Wert wird in Schritt 5 für den `MuzzlePoint`-Marker-Node
 gebraucht (`Turret/MuzzlePoint`, siehe `TowerBase.gd`).

@@ -1,6 +1,6 @@
-Aktueller MVP-Scope: 1 Turm (MG-Turm, noch nicht produziert), 1 Gegner (Dschungel-Späher), 1 Held (Dschungel-Wächter), 1 Level.
+Aktueller MVP-Scope: 1 Turm (MG-Turm, integriert und aktiver Starter-Turm), 1 Gegner (Dschungel-Späher), 1 Held (Dschungel-Wächter), 1 Level.
 
-Übergangsstatus: Das Bogenschützen-Nest bleibt bis zur erfolgreichen MG-Turm-Integration als deprecated Legacy-Starter-Turm im Projekt, damit der Prototyp während Refactor und Asset-Produktion vollständig spielbar bleibt. Danach wird es in einem separaten Cleanup-Auftrag entfernt.
+Übergangsstatus: Der MG-Turm ist integriert und im BuildMenu als Starter-Turm aktiv. Das Bogenschützen-Nest ist aus dem BuildMenu entfernt, seine Dateien bleiben aber vorerst als deprecated Legacy im Repo und werden erst in einem separaten Cleanup-Auftrag (nach expliziter Freigabe) entfernt.
 
 
 
@@ -54,3 +54,5 @@ Update [08.07.2026]: MVP-Fokus bewusst von Bogenschützen-Nest auf MG-Turm umges
 
 
 Update [08.07.2026]: TowerBase-Refactor kombiniert abgeschlossen: AttackBehavior-Komponenten (SingleTargetAttack, AoEAttack) implementiert, Sockel/Turret-Struktur in TowerBase eingeführt (mit Opt-out über turret_rotation_enabled). Bogenschützen-Nest, Dornen-Kaserne und Giftschleuder auf neues System migriert - Verhalten identisch, keine Änderung im Spielverlauf. Bogenschützen-Nest bleibt deprecated Legacy-Starter bis zur MG-Turm-Integration.
+
+Update [14.07.2026]: MG-Turm integriert (Schritt 5, Asset-Paket asset_paket_mg_turm_lvl1). Neue Szene scenes/towers/MgTurm.tscn (extends TowerBase, Sockel/Turret + MuzzlePoint), Resource resources/towers/mg_turm.tres, Projektil-Szene scenes/towers/MgProjectile.tscn. EffectBase-System ist jetzt Ist-Zustand (nicht mehr nur geplant): scripts/entities/EffectBase.gd + scenes/effects/EffectBase.tscn spielen datengetriebene EffectConfig-SpriteFrames einmal ab und räumen sich selbst auf. SingleTargetAttack spawnt Mündungsfeuer (muzzle_effect_config) am MuzzlePoint; ProjectileBase.launch() nimmt jetzt optional eine impact_effect_config entgegen und spawnt beim Einschlag einen EffectBase-Effekt (Legacy-CPUParticles2D bleibt als dokumentierter Fallback bei null). Effekt-Resources: resources/effects/muendungsfeuer_klein.tres, resources/effects/kugel_einschlag.tres. MG-Turm ist neuer Starter-Turm im BuildMenu (PrototypeLevel HUD), Bogenschützen-Nest aus dem BuildMenu entfernt (Dateien bleiben bis Cleanup). Platzhalter-Werte (damage 4, fire_rate 0.2, range 200, cost 50, Sprite-Skalierungen, Effekt-scale) sowie MuzzlePoint (23.53, -2.73 = Turret-Offset 181,-21 * 0.13) werden im Balancing-Pass / manuellen Godot-Test kalibriert. Manuelle Test-Checkliste aus dem Asset-Paket steht noch aus.

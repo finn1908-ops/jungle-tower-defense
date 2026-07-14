@@ -953,4 +953,41 @@ wenn Legacy-Config aktiviert wird).
   Mündungsfeuer und Einschlag nicht hart im Code verdrahtet werden.
 - Migration der bestehenden Turm-Configs präzisiert: Bogenschützen-Nest,
   Dornen-Kaserne und Giftschleuder dürfen technisch migriert werden, auch
-  wenn sie inhaltlich pausie
+  wenn sie inhaltlich pausiert bzw. deprecated sind.
+- Neue Regel Nr. 9 für Claude Code (Section 14): Preflight-Check vor jedem
+  Asset-Paket- und Integrationsauftrag ist Pflicht (aktuelle Architektur-
+  Doku, Base- und Config-Skripte gegenprüfen, keine hypothetischen
+  Feldnamen). Grund: Im MG-Turm-Asset-Paket waren Altlasten aus früheren
+  Architekturständen (`TowerBase.tscn`) und ungeprüfte Feldnamen
+  aufgetaucht. Asset-Paket-Vorlage (Section 6) bekommt dafür einen neuen
+  Pflichtabschnitt „0. Preflight-Check vor Finalisierung".
+
+**v1.1 (07. Juli 2026):**
+- Bogenschützen-Nest als erster Turm entfernt (stilistischer Bruch mit
+  StyleGuide-Roster, das militärische Türme vorsieht). Ersetzt durch
+  MG-Turm.
+- Neuer verbindlicher Turm-Aufbau: Sockel (statisch, zur Kamera
+  ausgerichtet) + Turret (rotiert zum Ziel). Opt-out via
+  `turret_rotation_enabled = false` für Sondertürme (Mörser, Tarn-Falle,
+  aktuelle Dornen-Kaserne).
+- Turm-Paket-Bestandteile (Section 6.1) auf zweiteiligen Aufbau
+  umgestellt: `base.png` + `turret.png` statt `idle.png`.
+- Turm-State-Machine (Section 7.2) um konkrete Rotation-Semantik im
+  `ACQUIRING`-State ergänzt.
+- Pivot-Regeln (Section 10) um Turret-Drehachse und `MuzzlePoint`-Marker
+  ergänzt.
+- Neue Regel Nr. 8 für Claude Code (Section 14): Türme standardmäßig
+  Sockel + Turret, monolithische Legacy-Einzelsprites nur mit
+  dokumentiertem Opt-out.
+- Ausblick (Section 15) Reihenfolge festgelegt: Aufräum-Auftrag →
+  TowerBase-Refactor (AttackBehavior + Sockel/Turret) →
+  Asset-Paket-Dokument → MG-Turm-Integration (ab hier ist das Spiel
+  wieder vollständig spielbar) → Level-Hintergrund-Einbau (jetzt mit
+  funktionsfähigem Turm testbar) → Gegner-Paket → Animation-State-Machine
+  → Balancing-Pass.
+
+**v1.0 (07. Juli 2026):**
+- Erstversion des Dokuments. Etabliert Asset-Kategorien,
+  Namenskonventionen, Asset-Paket-Regel (Entity vs. Nicht-Entity),
+  Animation-State-Machines, Effekt-System, AttackBehavior-Komponenten,
+  Pivot-Regeln, Definition of Done, Pipeline.

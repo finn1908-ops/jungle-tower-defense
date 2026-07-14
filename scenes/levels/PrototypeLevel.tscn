@@ -4,9 +4,9 @@
 [ext_resource type="Script" path="res://scripts/systems/WaveManager.gd" id="2"]
 [ext_resource type="Script" path="res://scripts/ui/HUD.gd" id="3"]
 [ext_resource type="Resource" path="res://resources/waves/prototype_level_waves.tres" id="4"]
-[ext_resource type="PackedScene" path="res://scenes/towers/BogenschuetzenNest.tscn" id="5"]
+[ext_resource type="PackedScene" path="res://scenes/towers/MgTurm.tscn" id="5"]
 [ext_resource type="Script" path="res://scripts/entities/TowerSlot.gd" id="6"]
-[ext_resource type="Resource" path="res://resources/towers/bogenschuetzen_nest.tres" id="7"]
+[ext_resource type="Resource" path="res://resources/towers/mg_turm.tres" id="7"]
 [ext_resource type="Texture2D" path="res://assets/sprites/environment/boden_dschungel.png" id="8"]
 [ext_resource type="Texture2D" path="res://assets/sprites/environment/pfad_erde.png" id="9"]
 
@@ -123,7 +123,7 @@ offset_left = 16.0
 offset_top = 12.0
 offset_right = 384.0
 offset_bottom = 42.0
-text = "Bogenschützen-Nest (50 Gold)"
+text = "MG-Turm (50 Gold)"
 
 [node name="BuildConfirmButton" type="Button" parent="HUD/BuildMenu"]
 offset_left = 16.0
