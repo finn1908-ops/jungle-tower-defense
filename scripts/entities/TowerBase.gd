@@ -33,6 +33,8 @@ func _ready() -> void:
 
 ## Turret dreht sich zum Ziel. Legacy-Türme (kein Turret bzw. Rotation aus)
 ## überspringen diesen Schritt komplett und verhalten sich unverändert.
+## Ohne Ziel bleibt der Turret in der zuletzt eingenommenen Ausrichtung stehen
+## (IDLE = "verfolgt weiter", kein Zurückdrehen auf 0°).
 func _process(delta: float) -> void:
 	if not _is_turret_active():
 		return
@@ -40,9 +42,37 @@ func _process(delta: float) -> void:
 	if target == null:
 		return
 	var target_angle: float = (target.global_position - global_position).angle()
+	_aim_turret(target_angle, delta)
+
+## Richtet den gerichteten Turret aus, ohne ihn je kopfüber zu drehen.
+## Statt reiner 360°-Rotation (die eine nach links zeigende, nicht
+## rotationssymmetrische Turret-Grafik auf den Kopf stellen würde) wird ab der
+## Vertikalachse horizontal gespiegelt (flip_h) und nur um einen kleinen
+## Restwinkel gedreht (Standardmuster für 2D-Top-Down-Türme, Kingdom-Rush-Stil).
+##
+## Godot-Konvention: y-Achse zeigt nach unten, target_angle = atan2(dy, dx),
+## 0 rad = rechts. "Ziel rechts der Turm-Vertikalachse" <=> dx > 0 <=>
+## abs(target_angle) <= PI/2.
+##
+## Gespiegelter Fall: flip_h spiegelt den Barrel auf lokal -x, nach Rotation φ
+## zeigt er also auf φ+PI. Damit der (sichtbare) Barrel auf target_angle zielt,
+## gilt φ = target_angle - PI (== target_angle + PI, auf -PI..PI normalisiert).
+## Ergebnis: φ liegt immer in (-PI/2, PI/2) -> die Grafik bleibt aufrecht.
+## (Die naheliegende Formel PI - target_angle wäre falsch: sie würde den Barrel
+## auf -target_angle richten, also vertikal gespiegelt am Ziel vorbei.)
+func _aim_turret(target_angle: float, delta: float) -> void:
+	var desired: float
+	if absf(target_angle) <= PI / 2.0:
+		if _turret_sprite:
+			_turret_sprite.flip_h = false
+		desired = target_angle
+	else:
+		if _turret_sprite:
+			_turret_sprite.flip_h = true
+		desired = wrapf(target_angle - PI, -PI, PI)
 	# rotate_toward clamped die Änderung und behandelt den Winkel-Wraparound,
 	# damit die Rotation nicht wackelt oder überschwingt.
-	_turret.rotation = rotate_toward(_turret.rotation, target_angle, config.turret_rotation_speed * delta)
+	_turret.rotation = rotate_toward(_turret.rotation, desired, config.turret_rotation_speed * delta)
 
 func _on_fire_timer_timeout() -> void:
 	if config.attack_behavior == null:
@@ -62,7 +92,13 @@ func _is_turret_aligned() -> bool:
 	if target == null:
 		return false
 	var target_angle: float = (target.global_position - global_position).angle()
-	var diff: float = abs(angle_difference(_turret.global_rotation, target_angle))
+	# Bei gespiegeltem Turret zeigt der sichtbare Barrel auf global_rotation+PI
+	# (siehe _aim_turret). Gegen die tatsächliche Barrel-Richtung prüfen, sonst
+	# wäre ein nach links zeigender Turret nie "ausgerichtet" und feuerte nie.
+	var barrel_angle: float = _turret.global_rotation
+	if _turret_sprite and _turret_sprite.flip_h:
+		barrel_angle += PI
+	var diff: float = abs(angle_difference(barrel_angle, target_angle))
 	return diff <= deg_to_rad(config.turret_alignment_tolerance_deg)
 
 ## Sucht das Ziel (höchster Pfad-Fortschritt in Reichweite) und cached es.
@@ -92,10 +128,18 @@ func find_target() -> EnemyBase:
 
 ## Globale Mündungsposition für Projektil-/Muzzle-Effekt-Spawn. Ohne
 ## MuzzlePoint (Legacy-Turm) fällt sie auf die Turm-Position zurück.
+##
+## Wichtig: flip_h spiegelt nur die Sprite-Textur, nicht die Position des
+## Sibling-Nodes MuzzlePoint. Bei gespiegeltem Turret liegt die sichtbare
+## Mündung deshalb auf der gespiegelten lokalen x-Position; wir spiegeln den
+## lokalen Offset entsprechend, bevor wir ihn nach global transformieren.
 func get_muzzle_global_position() -> Vector2:
-	if _muzzle:
-		return _muzzle.global_position
-	return global_position
+	if _muzzle == null or _turret == null:
+		return global_position
+	var local: Vector2 = _muzzle.position
+	if _turret_sprite and _turret_sprite.flip_h:
+		local.x = -local.x
+	return _turret.to_global(local)
 
 func _on_game_over() -> void:
 	_fire_timer.stop()
